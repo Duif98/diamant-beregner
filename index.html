@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diamant Prisberegner</title>
+<style>
+:root{--primary:#1a1a2e;--accent:#e94560;--bg:#f5f6fa;--card:#fff;--border:#e0e0e0;--text:#2d2d2d;--muted:#888;--green:#27ae60;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{background:var(--primary);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:10px;}
+header h1{font-size:1.1rem;font-weight:700;}
+.tabs{display:flex;background:var(--primary);border-top:1px solid #333;overflow-x:auto;}
+.tab{flex:1;min-width:68px;padding:9px 3px;text-align:center;color:#aaa;font-size:0.71rem;cursor:pointer;border:none;background:none;white-space:nowrap;}
+.tab.active{color:var(--accent);border-bottom:2px solid var(--accent);}
+.page{display:none;padding:14px;max-width:700px;margin:0 auto;}
+.page.active{display:block;}
+.card{background:var(--card);border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.card h2{font-size:.95rem;font-weight:700;margin-bottom:10px;color:var(--primary);}
+label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:3px;margin-top:9px;}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-size:.88rem;background:var(--bg);color:var(--text);}
+input:focus,select:focus{outline:none;border-color:var(--accent);}
+.btn{display:block;width:100%;padding:11px;border-radius:10px;border:none;font-size:.9rem;font-weight:700;cursor:pointer;margin-top:9px;transition:opacity .2s;}
+.btn:hover{opacity:.88;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-outline{background:#fff;color:var(--primary);border:2px solid var(--primary);}
+.btn-green{background:var(--green);color:#fff;}
+.btn-sm{padding:6px 12px;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;border:none;}
+.btn-add-row{background:#f0f7ff;color:#2255aa;border:1.5px dashed #90bde0;width:100%;padding:8px;border-radius:8px;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:8px;}
+.btn-add-row:hover{background:#daeeff;}
+.row-table{width:100%;border-collapse:collapse;margin-top:4px;}
+.row-table th{font-size:.72rem;color:var(--muted);font-weight:700;padding:4px 5px;text-align:left;border-bottom:2px solid var(--border);}
+.row-table td{padding:4px 3px;vertical-align:top;}
+.row-table input,.row-table select{padding:6px 7px;font-size:.82rem;}
+.row-total{font-weight:700;font-size:.88rem;color:var(--accent);text-align:right;white-space:nowrap;}
+.rm-btn{background:none;border:none;color:#ccc;font-size:1rem;cursor:pointer;padding:2px 5px;}
+.rm-btn:hover{color:var(--accent);}
+.subtotal-bar{display:flex;justify-content:space-between;align-items:center;padding:9px 4px 0;border-top:2px solid var(--border);margin-top:6px;}
+.subtotal-bar .lbl{font-size:.82rem;color:var(--muted);}
+.subtotal-bar .amt{font-size:1.2rem;font-weight:800;color:var(--accent);}
+.info-box{background:#f0f7ff;border:1px solid #b0d4f1;border-radius:8px;padding:8px 11px;font-size:.8rem;color:#2255aa;margin-top:7px;}
+.save-notice{background:#f0fff4;border:1px solid #a0ddb0;border-radius:8px;padding:7px 11px;font-size:.78rem;color:#1a7a3a;margin-top:8px;display:none;}
+.cb-group{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
+.cb-item{display:flex;align-items:center;gap:6px;background:#f5f6fa;border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;cursor:pointer;font-size:.82rem;transition:all .15s;user-select:none;}
+.cb-item:hover{border-color:var(--accent);}
+.cb-item.checked{background:#fff0f3;border-color:var(--accent);color:var(--accent);font-weight:700;}
+.cb-item input{display:none;}
+.cb-badge{font-size:.7rem;background:var(--accent);color:#fff;border-radius:4px;padding:1px 5px;margin-left:3px;}
+.line-item{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);font-size:.86rem;}
+.line-item:last-child{border-bottom:none;}
+.line-item .desc{flex:1;}
+.line-item .price{font-weight:700;white-space:nowrap;margin-left:9px;}
+.vat-row{display:flex;justify-content:space-between;padding:4px 0;font-size:.83rem;color:var(--muted);}
+.total-row{display:flex;justify-content:space-between;padding:9px 0 4px;font-weight:800;font-size:1rem;}
+.grand-total{display:flex;justify-content:space-between;padding:9px 0 0;font-weight:900;font-size:1.25rem;color:var(--accent);border-top:2px solid var(--border);margin-top:7px;}
+.empty-msg{text-align:center;color:var(--muted);padding:18px;font-size:.88rem;}
+.badge{background:var(--accent);color:#fff;border-radius:50%;width:17px;height:17px;font-size:.68rem;display:inline-flex;align-items:center;justify-content:center;font-weight:700;}
+.bor-grid-head{display:grid;grid-template-columns:90px 1fr 36px;gap:5px;margin-bottom:4px;}
+.bor-grid-head span{font-size:.72rem;color:var(--muted);font-weight:700;}
+.bor-grid-row{display:grid;grid-template-columns:90px 1fr 36px;gap:5px;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);}
+.bor-grid-row:last-child{border-bottom:none;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+.sep{height:1px;background:var(--border);margin:12px 0;}
+.st{font-size:.85rem;font-weight:700;color:var(--primary);margin-bottom:6px;}
+.tid-summary{background:#fff8f0;border:1px solid #ffd0a0;border-radius:8px;padding:10px 13px;margin-top:10px;font-size:.85rem;line-height:1.7;}
+.tid-summary strong{color:var(--accent);}
+@media print{
+  header,.tabs,.page:not(#page-faktura){display:none!important;}
+  #page-faktura{display:block!important;padding:0;}
+  .btn{display:none;}
+  .card{box-shadow:none;}
+}
+</style>
+</head>
+<body>
+<header><span>💎</span><h1>Diamant Boring & Skæring</h1></header>
+<div class="tabs">
+  <button class="tab active" onclick="showPage('boring')">🔩 Boring</button>
+  <button class="tab" onclick="showPage('skaering')">🔪 Skæring</button>
+  <button class="tab" onclick="showPage('tid')">⏱️ Tid & Kørs.</button>
+  <button class="tab" onclick="showPage('faktura')">🧾 Faktura <span id="item-badge" style="display:none" class="badge">0</span></button>
+  <button class="tab" onclick="showPage('indstillinger')">⚙️ Priser</button>
+</div>
+
+<!-- BORING -->
+<div id="page-boring" class="page active">
+  <div class="card">
+    <h2>🔩 Kerneboring</h2>
+    <div class="info-box">📏 Minimum fakturering: 20 cm dybde. Pris = dybde (cm) × kr/cm.</div>
+    <div class="sep"></div>
+    <div class="st">Tillæg (afkryds hvad der gælder)</div>
+    <div class="cb-group">
+      <label class="cb-item" onclick="toggleCb('b','boregrej')"><input type="checkbox" id="cb-b-boregrej">🔧 Boregrej</label>
+      <label class="cb-item" onclick="toggleCb('b','ringsav')"><input type="checkbox" id="cb-b-ringsav">⭕ Ring & kapsav</label>
+      <label class="cb-item" onclick="toggleCb('b','skra')"><input type="checkbox" id="cb-b-skra">📐 Skråboring <span class="cb-badge">+25%</span></label>
+      <label class="cb-item" onclick="toggleCb('b','underop')"><input type="checkbox" id="cb-b-underop">⬆️ Under-op boring <span class="cb-badge">+100%</span></label>
+    </div>
+    <div class="sep"></div>
+    <div style="overflow-x:auto;">
+      <table class="row-table">
+        <thead><tr>
+          <th>Diameter</th><th>Dybde (cm)</th><th>Antal</th>
+          <th style="text-align:right">Enhedspris</th><th style="text-align:right">Total</th><th></th>
+        </tr></thead>
+        <tbody id="boring-rows"></tbody>
+      </table>
+    </div>
+    <button class="btn-add-row" onclick="addBoringRow()">＋ Tilføj linje</button>
+    <div class="subtotal-bar">
+      <span class="lbl">Subtotal boring</span>
+      <span class="amt" id="boring-subtotal">0 kr</span>
+    </div>
+    <button class="btn btn-primary" onclick="commitBoring()">+ Føj boringer til faktura</button>
+  </div>
+</div>
+
+<!-- SKÆRING -->
+<div id="page-skaering" class="page">
+  <div class="card">
+    <h2>🔪 Skæring</h2>
+    <div class="st">Tillæg</div>
+    <div class="cb-group">
+      <label class="cb-item" onclick="toggleCb('s','vaegsaw')"><input type="checkbox" id="cb-s-vaegsaw">🪚 Vægsav</label>
+      <label class="cb-item" onclick="toggleCb('s','gulvsav')"><input type="checkbox" id="cb-s-gulvsav">🔲 Gulvsav</label>
+      <label class="cb-item" onclick="toggleCb('s','ringsav')"><input type="checkbox" id="cb-s-ringsav">⭕ Ring & kapsav</label>
+    </div>
+    <div class="sep"></div>
+    <div style="overflow-x:auto;">
+      <table class="row-table">
+        <thead><tr>
+          <th>Type</th><th>Meter</th><th>Dybde (cm)</th><th>Antal</th>
+          <th style="text-align:right">Total</th><th></th>
+        </tr></thead>
+        <tbody id="skaering-rows"></tbody>
+      </table>
+    </div>
+    <button class="btn-add-row" onclick="addSkaeringRow()">＋ Tilføj linje</button>
+    <div class="subtotal-bar">
+      <span class="lbl">Subtotal skæring</span>
+      <span class="amt" id="skaering-subtotal">0 kr</span>
+    </div>
+    <button class="btn btn-primary" onclick="commitSkaering()">+ Føj skæring til faktura</button>
+  </div>
+</div>
+
+<!-- TID & KØRSEL -->
+<div id="page-tid" class="page">
+  <div class="card">
+    <h2>⏱️ Arbejdstid</h2>
+
+    <div class="st" style="margin-top:4px">Inkl. diamantværktøj</div>
+    <div class="two-col">
+      <div>
+        <label>Normaltid (timer)</label>
+        <input type="number" id="t-dia-normal" value="" min="0" step="0.5" placeholder="0">
+      </div>
+      <div>
+        <label>Overtid (timer)</label>
+        <input type="number" id="t-dia-over" value="" min="0" step="0.5" placeholder="0">
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="st">Uden diamantværktøj</div>
+    <div class="two-col">
+      <div>
+        <label>Normaltid (timer)</label>
+        <input type="number" id="t-norm" value="" min="0" step="0.5" placeholder="0">
+      </div>
+      <div>
+        <label>Overtid (timer)</label>
+        <input type="number" id="t-over" value="" min="0" step="0.5" placeholder="0">
+      </div>
+    </div>
+
+    <div id="tid-summary" class="tid-summary" style="display:none"></div>
+    <button class="btn btn-primary" style="margin-top:12px" onclick="commitTid()">+ Tilføj tid til faktura</button>
+  </div>
+
+  <div class="card">
+    <h2>🚗 Kørsel</h2>
+    <div class="info-box">Første 25 km: fast pris. Herefter pr. km.</div>
+    <div class="two-col" style="margin-top:10px">
+      <div>
+        <label>Samlet kørsel (km)</label>
+        <input type="number" id="k-km" value="" placeholder="0" min="0">
+      </div>
+      <div>
+        <label>Beregnet pris</label>
+        <input type="text" id="k-price-display" readonly style="background:#eee;font-weight:700;">
+      </div>
+    </div>
+    <div id="k-breakdown" style="font-size:.79rem;color:var(--muted);margin-top:5px;"></div>
+    <button class="btn btn-primary" onclick="commitKorsel()">+ Tilføj kørsel til faktura</button>
+  </div>
+</div>
+
+<!-- FAKTURA -->
+<div id="page-faktura" class="page">
+  <div class="card">
+    <h2>🧾 Fakturaoversigt</h2>
+    <div id="line-items"><div class="empty-msg">Ingen ydelser tilføjet endnu.</div></div>
+    <div id="faktura-totals" style="display:none">
+      <div class="vat-row"><span>Subtotal ydelser</span><span id="subtotal-val"></span></div>
+      <div class="vat-row" id="start-row" style="display:none"><span>Startgebyr</span><span id="startgebyr-val"></span></div>
+      <div class="total-row"><span>I alt ex. moms</span><span id="total-ex-val"></span></div>
+      <div class="vat-row"><span>Moms 25%</span><span id="moms-val"></span></div>
+      <div class="grand-total"><span>TOTAL inkl. moms</span><span id="grand-val"></span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>📋 Kundeoplysninger</h2>
+    <label>Kundenavn / Firma</label><input type="text" id="f-kunde" placeholder="Navn eller firmanavn">
+    <label>Adresse</label><input type="text" id="f-adresse" placeholder="Vej, by">
+    <div class="two-col">
+      <div><label>Fakturanummer</label><input type="text" id="f-nr" placeholder="fx 2024-001"></div>
+      <div><label>Dato</label><input type="date" id="f-dato"></div>
+    </div>
+    <label>Betalingsfrist (dage)</label><input type="number" id="f-frist" value="14">
+  </div>
+  <button class="btn btn-green" onclick="printFaktura()">🖨️ Print / Gem som PDF</button>
+  <button class="btn btn-outline" onclick="clearFaktura()" style="margin-top:8px">🗑️ Ryd faktura</button>
+</div>
+
+<!-- INDSTILLINGER -->
+<div id="page-indstillinger" class="page">
+  <div class="card">
+    <h2>🔩 Boring – Prisliste (kr/cm)</h2>
+    <p style="font-size:.79rem;color:var(--muted);margin-bottom:10px">Pris pr. cm dybde. Minimum 20 cm faktureres altid.</p>
+    <div class="bor-grid-head"><span>Diameter</span><span>Kr/cm</span><span></span></div>
+    <div id="boring-price-list"></div>
+    <div class="sep"></div>
+    <p class="st">Tilføj nyt bor</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:7px;align-items:flex-end">
+      <div><label>Diameter (mm)</label><input type="number" id="new-dia" placeholder="fx 175" min="1"></div>
+      <div><label>Kr/cm</label><input type="number" id="new-rate" placeholder="fx 35" step="0.25"></div>
+      <button class="btn-sm btn-primary" onclick="addBorDia()" style="height:36px;margin-top:auto">+ Tilføj</button>
+    </div>
+    <div id="save-notice-bor" class="save-notice">✅ Priser gemt automatisk</div>
+  </div>
+
+  <div class="card">
+    <h2>🔪 Skæring – pris pr. cm²</h2>
+    <div class="three-col">
+      <div><label>Ring & Kapsav (kr/cm²)</label><input type="number" id="p-flad" step="0.01" oninput="saveSettings()"></div>
+      <div><label>Vægskæring (kr/cm²)</label><input type="number" id="p-vaeg" step="0.01" oninput="saveSettings()"></div>
+      <div><label>Gulvskæring (kr/cm²)</label><input type="number" id="p-gulv" step="0.01" oninput="saveSettings()"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⏱️ Timepriser</h2>
+    <div class="two-col">
+      <div><label>Normaltid inkl. diamantværktøj (kr/t)</label><input type="number" id="p-dia-normal" step="10" oninput="saveSettings()"></div>
+      <div><label>Normaltid uden diamantværktøj (kr/t)</label><input type="number" id="p-norm-normal" step="10" oninput="saveSettings()"></div>
+    </div>
+    <div class="two-col" style="margin-top:8px">
+      <div><label>Overtidstillæg (kr/t, lægges oveni)</label><input type="number" id="p-over" step="10" oninput="saveSettings()"></div>
+    </div>
+    <div class="info-box" style="margin-top:8px">ℹ️ Overtidstillæg lægges oven i den relevante normaltimepris.</div>
+  </div>
+
+  <div class="card">
+    <h2>🚗 Kørsel</h2>
+    <div class="two-col">
+      <div><label>Fast pris 0–25 km (kr)</label><input type="number" id="p-km-fast" step="25" oninput="saveSettings()"></div>
+      <div><label>Pris pr. km over 25 (kr)</label><input type="number" id="p-km-extra" step="0.5" oninput="saveSettings()"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⚙️ Gebyrer & Tillæg</h2>
+    <label>Startgebyr (kr ex. moms)</label><input type="number" id="p-start" oninput="saveSettings()">
+    <div class="sep"></div>
+    <p class="st">Oprigningstillæg – pr. gang (ex. moms)</p>
+    <div class="three-col" style="margin-top:6px">
+      <div><label>Boregrej</label><input type="number" id="p-boregrej" oninput="saveSettings()"></div>
+      <div><label>Vægsav</label><input type="number" id="p-vaegsaw" oninput="saveSettings()"></div>
+      <div><label>Gulvsav</label><input type="number" id="p-gulvsav" oninput="saveSettings()"></div>
+    </div>
+    <div class="two-col" style="margin-top:8px">
+      <div><label>Ring & Kapsav (boring)</label><input type="number" id="p-oprig-b" oninput="saveSettings()"></div>
+      <div><label>Ring & Kapsav (skæring)</label><input type="number" id="p-oprig-s" oninput="saveSettings()"></div>
+    </div>
+    <div class="info-box" style="margin-top:8px">📌 Tillæggene vises kun på fakturaen hvis de er afkrydset.</div>
+  </div>
+
+  <button class="btn btn-outline" onclick="resetAll()" style="margin-bottom:16px">🔄 Nulstil alle priser til standard</button>
+</div>
+
+<script>
+const DEFAULT_DIAMETERS = [
+  {dia:'0-92',label:'Ø0–92 mm',rate:14.00},
+  {dia:102,rate:15.50},{dia:112,rate:16.00},{dia:117,rate:16.50},
+  {dia:122,rate:17.00},{dia:127,rate:18.00},{dia:132,rate:18.50},
+  {dia:138,rate:19.00},{dia:142,rate:19.50},{dia:152,rate:20.00},
+  {dia:162,rate:21.50},{dia:172,rate:22.50},{dia:182,rate:23.00},
+  {dia:186,rate:25.50},{dia:202,rate:27.00},{dia:212,rate:27.50},
+  {dia:226,rate:28.50},{dia:242,rate:31.00},{dia:252,rate:32.25},
+  {dia:262,rate:33.50},{dia:276,rate:34.50},{dia:302,rate:39.00},
+  {dia:312,rate:41.00},{dia:325,rate:43.00},{dia:341,rate:45.00},
+  {dia:352,rate:50.00},{dia:368,rate:52.50},{dia:402,rate:54.50},
+  {dia:425,rate:58.50},{dia:452,rate:65.50},{dia:502,rate:83.50},
+  {dia:525,rate:91.00},{dia:552,rate:94.50},{dia:602,rate:104.00},
+  {dia:652,rate:117.00},{dia:710,rate:149.00},{dia:750,rate:157.50},
+  {dia:800,rate:167.00},{dia:820,rate:169.50},{dia:850,rate:175.50},
+  {dia:900,rate:212.00},{dia:1000,rate:272.50},{dia:1100,rate:319.00},
+];
+const DEFAULT_SETTINGS = {
+  pFlad:0.50,pVaeg:0.35,pGulv:0.25,
+  pDiaNormal:780,pNormNormal:490,pOver:245,
+  pKmFast:425,pKmExtra:8.50,
+  pStart:0,
+  pBoregrej:330,pVaegsaw:660,pGulvsav:660,
+  pOprigB:330,pOprigS:330,
+};
+
+let borDiameters=[], settings={};
+let lineItems=[], hasBoring=false, hasSkaering=false;
+let boringRows=[{dia:'0-92',depthRaw:'',qty:1}];
+let skaeringRows=[{type:'flad',meter:'',depth:'',qty:1}];
+const cbState={b:{boregrej:false,ringsav:false,skra:false,underop:false},s:{vaegsaw:false,gulvsav:false,ringsav:false}};
+const cbLabels={boregrej:'Boregrej',ringsav:'Ring & kapsav',skra:'Skråboring (+25%)',underop:'Under-op boring (+100%)',vaegsaw:'Vægsav',gulvsav:'Gulvsav'};
+
+// ── Load/Save ──────────────────────────────────────────
+function loadData(){
+  try{const d=localStorage.getItem('diam_diameters');borDiameters=d?JSON.parse(d):JSON.parse(JSON.stringify(DEFAULT_DIAMETERS));}
+  catch(e){borDiameters=JSON.parse(JSON.stringify(DEFAULT_DIAMETERS));}
+  try{const s=localStorage.getItem('diam_settings');settings=s?{...DEFAULT_SETTINGS,...JSON.parse(s)}:{...DEFAULT_SETTINGS};}
+  catch(e){settings={...DEFAULT_SETTINGS};}
+}
+function saveDiameters(){localStorage.setItem('diam_diameters',JSON.stringify(borDiameters));flashNotice('save-notice-bor');}
+function saveSettings(){
+  settings.pFlad      = gV('p-flad');
+  settings.pVaeg      = gV('p-vaeg');
+  settings.pGulv      = gV('p-gulv');
+  settings.pDiaNormal = gV('p-dia-normal');
+  settings.pNormNormal= gV('p-norm-normal');
+  settings.pOver      = gV('p-over');
+  settings.pKmFast    = gV('p-km-fast');
+  settings.pKmExtra   = gV('p-km-extra');
+  settings.pStart     = gV('p-start');
+  settings.pBoregrej  = gV('p-boregrej');
+  settings.pVaegsaw   = gV('p-vaegsaw');
+  settings.pGulvsav   = gV('p-gulvsav');
+  settings.pOprigB    = gV('p-oprig-b');
+  settings.pOprigS    = gV('p-oprig-s');
+  localStorage.setItem('diam_settings',JSON.stringify(settings));
+}
+function flashNotice(id){
+  const el=document.getElementById(id);if(!el)return;
+  el.style.display='block';clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',2000);
+}
+function applySettingsToUI(){
+  setVal('p-flad',     settings.pFlad);
+  setVal('p-vaeg',     settings.pVaeg);
+  setVal('p-gulv',     settings.pGulv);
+  setVal('p-dia-normal',settings.pDiaNormal);
+  setVal('p-norm-normal',settings.pNormNormal);
+  setVal('p-over',     settings.pOver);
+  setVal('p-km-fast',  settings.pKmFast);
+  setVal('p-km-extra', settings.pKmExtra);
+  setVal('p-start',    settings.pStart);
+  setVal('p-boregrej', settings.pBoregrej);
+  setVal('p-vaegsaw',  settings.pVaegsaw);
+  setVal('p-gulvsav',  settings.pGulvsav);
+  setVal('p-oprig-b',  settings.pOprigB);
+  setVal('p-oprig-s',  settings.pOprigS);
+}
+function setVal(id,val){const el=document.getElementById(id);if(el)el.value=val;}
+function resetAll(){
+  if(!confirm('Nulstil alle priser til standard?'))return;
+  borDiameters=JSON.parse(JSON.stringify(DEFAULT_DIAMETERS));
+  settings={...DEFAULT_SETTINGS};
+  localStorage.setItem('diam_diameters',JSON.stringify(borDiameters));
+  localStorage.setItem('diam_settings',JSON.stringify(settings));
+  applySettingsToUI();renderBoringPriceList();renderBoringTable();
+  alert('Priser nulstillet ✅');
+}
+
+// ── Init ───────────────────────────────────────────────
+loadData();
+applySettingsToUI();
+document.getElementById('f-dato').value=new Date().toISOString().split('T')[0];
+renderBoringPriceList();
+renderBoringTable();
+renderSkaeringTable();
+
+// ── Tid inputs — live summary without re-render bug ────
+['t-dia-normal','t-dia-over','t-norm','t-over'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', updateTidSummary);
+});
+document.getElementById('k-km').addEventListener('input', updateKorselDisplay);
+
+function gV(id){return parseFloat(document.getElementById(id)?.value)||0;}
+function gVRaw(id){return document.getElementById(id)?.value||'';}
+
+// ── Tid summary (no re-render) ─────────────────────────
+function updateTidSummary(){
+  const diaN=gV('t-dia-normal'), diaO=gV('t-dia-over');
+  const normN=gV('t-norm'), normO=gV('t-over');
+  const pDia=settings.pDiaNormal, pNorm=settings.pNormNormal, pOv=settings.pOver;
+  const sum=document.getElementById('tid-summary');
+  let lines=[], total=0;
+  if(diaN>0){const v=Math.round(diaN*pDia);total+=v;lines.push(`Inkl. dia, normaltid: ${diaN}t × ${pDia} kr = <strong>${v.toLocaleString('da')} kr</strong>`);}
+  if(diaO>0){const v=Math.round(diaO*(pDia+pOv));total+=v;lines.push(`Inkl. dia, overtid: ${diaO}t × ${pDia+pOv} kr = <strong>${v.toLocaleString('da')} kr</strong>`);}
+  if(normN>0){const v=Math.round(normN*pNorm);total+=v;lines.push(`Uden dia, normaltid: ${normN}t × ${pNorm} kr = <strong>${v.toLocaleString('da')} kr</strong>`);}
+  if(normO>0){const v=Math.round(normO*(pNorm+pOv));total+=v;lines.push(`Uden dia, overtid: ${normO}t × ${pNorm+pOv} kr = <strong>${v.toLocaleString('da')} kr</strong>`);}
+  if(lines.length===0){sum.style.display='none';return;}
+  sum.style.display='block';
+  sum.innerHTML=lines.join('<br>')+`<br><strong>Total: ${total.toLocaleString('da')} kr</strong>`;
+}
+function commitTid(){
+  const diaN=gV('t-dia-normal'),diaO=gV('t-dia-over'),normN=gV('t-norm'),normO=gV('t-over');
+  const pDia=settings.pDiaNormal,pNorm=settings.pNormNormal,pOv=settings.pOver;
+  if(diaN+diaO+normN+normO===0){alert('Indtast mindst 0,5 times arbejdstid.');return;}
+  if(diaN>0){const v=Math.round(diaN*pDia);lineItems.push({type:'tid',desc:`Arbejdstid inkl. diamantværktøj – normaltid (${diaN}t × ${pDia} kr)`,qty:1,unitPrice:v,total:v});}
+  if(diaO>0){const r=pDia+pOv,v=Math.round(diaO*r);lineItems.push({type:'tid',desc:`Arbejdstid inkl. diamantværktøj – overtid (${diaO}t × ${r} kr)`,qty:1,unitPrice:v,total:v});}
+  if(normN>0){const v=Math.round(normN*pNorm);lineItems.push({type:'tid',desc:`Arbejdstid uden diamantværktøj – normaltid (${normN}t × ${pNorm} kr)`,qty:1,unitPrice:v,total:v});}
+  if(normO>0){const r=pNorm+pOv,v=Math.round(normO*r);lineItems.push({type:'tid',desc:`Arbejdstid uden diamantværktøj – overtid (${normO}t × ${r} kr)`,qty:1,unitPrice:v,total:v});}
+  renderInvoice();showPage('faktura');
+}
+
+// ── Kørsel (no re-render) ──────────────────────────────
+function updateKorselDisplay(){
+  const km=gV('k-km'),fast=settings.pKmFast,extra=settings.pKmExtra;
+  const over=Math.max(0,km-25);
+  const price=km===0?0:Math.round(fast+over*extra);
+  document.getElementById('k-price-display').value=km>0?`${price.toLocaleString('da')} kr`:'';
+  document.getElementById('k-breakdown').textContent=km>25?`Fast (0–25 km): ${fast} kr  +  ${over} km × ${extra} kr = ${Math.round(over*extra)} kr`:'';
+}
+function commitKorsel(){
+  const km=gV('k-km');if(km===0){alert('Indtast antal km.');return;}
+  const fast=settings.pKmFast,extra=settings.pKmExtra,over=Math.max(0,km-25);
+  const price=Math.round(fast+over*extra);
+  lineItems.push({type:'korsel',desc:`Kørsel ${km} km${over>0?` (25 km fast + ${over} km × ${extra} kr)`:''}`,qty:1,unitPrice:price,total:price});
+  renderInvoice();showPage('faktura');
+}
+
+// ── Helpers ────────────────────────────────────────────
+function diaLabel(b){return b.label||`Ø${b.dia} mm`;}
+function diaOptions(sel){
+  return borDiameters.map(b=>`<option value="${b.dia}"${String(b.dia)===String(sel)?'selected':''}>${diaLabel(b)}</option>`).join('')
+        +`<option value="custom"${sel==='custom'?'selected':''}>Anden størrelse...</option>`;
+}
+function getBorEntry(dia){
+  if(dia==='0-92')return borDiameters[0];
+  const num=parseFloat(dia);
+  let b=borDiameters.find(x=>x.dia===num||String(x.dia)===String(dia));
+  if(!b){
+    const nums=borDiameters.filter(x=>typeof x.dia==='number').sort((a,c)=>a.dia-c.dia);
+    let lo=nums[0],hi=nums[nums.length-1];
+    for(let i=0;i<nums.length-1;i++){if(num>=nums[i].dia&&num<=nums[i+1].dia){lo=nums[i];hi=nums[i+1];break;}}
+    const r=(num-lo.dia)/Math.max(hi.dia-lo.dia,1);
+    return {rate:lo.rate+r*(hi.rate-lo.rate)};
+  }
+  return b;
+}
+function getBoringPrice(dia,depth){
+  const billDepth=Math.max(depth,20),b=getBorEntry(dia);
+  return {price:Math.round(billDepth*b.rate*getBoringMultiplier()),billDepth,rate:b.rate};
+}
+
+// ── Checkboxes ─────────────────────────────────────────
+function toggleCb(group,key){
+  cbState[group][key]=!cbState[group][key];
+  const el=document.getElementById(`cb-${group}-${key}`);if(el)el.checked=cbState[group][key];
+  document.querySelectorAll('.cb-item').forEach(item=>{const cb=item.querySelector('input');if(cb)item.classList.toggle('checked',cb.checked);});
+  if(group==='b')renderBoringTable();
+}
+function getBoringMultiplier(){let m=1;if(cbState.b.skra)m*=1.25;if(cbState.b.underop)m*=2;return m;}
+
+// ── Boring rows ────────────────────────────────────────
+function renderBoringTable(){
+  const tbody=document.getElementById('boring-rows');
+  tbody.innerHTML=boringRows.map((row,i)=>{
+    const depth=parseFloat(row.depthRaw)||0,qty=parseInt(row.qty)||1;
+    const isCustom=row.dia==='custom',dia=isCustom?(row.customDia||0):row.dia;
+    let rowTotal=0,unitP=0,billDepth=0,rate=0;
+    if(dia&&depth>0){const r=getBoringPrice(dia,depth);rowTotal=r.price*qty;unitP=r.price;billDepth=r.billDepth;rate=r.rate;}
+    return `<tr class="data-row">
+      <td>
+        <select onchange="setBorRow(${i},'dia',this.value)">${diaOptions(row.dia)}</select>
+        ${isCustom?`<input type="number" placeholder="mm" value="${row.customDia||''}" style="margin-top:4px" oninput="setBorRow(${i},'customDia',parseFloat(this.value)||0)">` : ''}
+      </td>
+      <td>
+        <input type="number" placeholder="cm" value="${row.depthRaw}" min="1" oninput="setBorRow(${i},'depthRaw',this.value)">
+        ${billDepth>0?`<div style="font-size:.7rem;color:var(--muted)">${billDepth}cm${depth<20?' (min)':''} × ${rate.toFixed(2)} kr</div>`:''}
+      </td>
+      <td><input type="number" value="${row.qty}" min="1" style="max-width:60px" oninput="setBorRow(${i},'qty',parseInt(this.value)||1)"></td>
+      <td class="row-total">${unitP>0?unitP.toLocaleString('da')+' kr':'–'}</td>
+      <td class="row-total">${rowTotal>0?rowTotal.toLocaleString('da')+' kr':'–'}</td>
+      <td><button class="rm-btn" onclick="removeBorRow(${i})">✕</button></td>
+    </tr>`;
+  }).join('');
+  calcBoringSubtotal();
+}
+function setBorRow(i,k,v){boringRows[i][k]=v;renderBoringTable();}
+function addBoringRow(){boringRows.push({dia:borDiameters[0].dia,depthRaw:'',qty:1});renderBoringTable();}
+function removeBorRow(i){if(boringRows.length===1){boringRows=[{dia:borDiameters[0].dia,depthRaw:'',qty:1}];}else{boringRows.splice(i,1);}renderBoringTable();}
+function calcBoringSubtotal(){
+  let t=0;
+  boringRows.forEach(r=>{
+    const d=parseFloat(r.depthRaw)||0,q=parseInt(r.qty)||1,dia=r.dia==='custom'?r.customDia||0:r.dia;
+    if(dia&&d>0)t+=getBoringPrice(dia,d).price*q;
+  });
+  document.getElementById('boring-subtotal').textContent=t>0?`${t.toLocaleString('da')} kr`:'0 kr';
+}
+function commitBoring(){
+  const activeChecks=Object.entries(cbState.b).filter(([,v])=>v).map(([k])=>cbLabels[k]);
+  const tillæg=activeChecks.length?` [${activeChecks.join(', ')}]`:'';
+  const mult=getBoringMultiplier(),multNote=mult>1?` (×${mult} tillæg)`:'';
+  let added=0;
+  boringRows.forEach(r=>{
+    const depth=parseFloat(r.depthRaw)||0,qty=parseInt(r.qty)||1,dia=r.dia==='custom'?r.customDia||0:r.dia;
+    if(!dia||!depth)return;
+    const {price,billDepth}=getBoringPrice(dia,depth);
+    const b=getBorEntry(dia),dStr=r.dia==='custom'?`Ø${dia}mm`:(b.label||`Ø${dia}mm`);
+    lineItems.push({type:'boring',desc:`Kerneboring ${dStr}, ${billDepth}cm${depth<20?' (min. 20cm)':''}${multNote}${tillæg}`,qty,unitPrice:price,total:price*qty});
+    added++;
+  });
+  if(cbState.b.boregrej)lineItems.push({type:'tillæg',desc:'Oprigningstillæg – Boregrej',qty:1,unitPrice:settings.pBoregrej,total:settings.pBoregrej});
+  if(cbState.b.ringsav)lineItems.push({type:'tillæg',desc:'Oprigningstillæg – Ring & Kapsav (boring)',qty:1,unitPrice:settings.pOprigB,total:settings.pOprigB});
+  if(added===0){alert('Udfyld mindst én linje med diameter og dybde.');return;}
+  hasBoring=true;renderInvoice();showPage('faktura');
+}
+
+// ── Skæring rows ───────────────────────────────────────
+function renderSkaeringTable(){
+  const tbody=document.getElementById('skaering-rows');
+  tbody.innerHTML=skaeringRows.map((row,i)=>{
+    const meter=parseFloat(row.meter)||0,depth=parseFloat(row.depth)||0,qty=parseInt(row.qty)||1;
+    const pKey={flad:'pFlad',vaeg:'pVaeg',gulv:'pGulv'}[row.type],p=settings[pKey]||0.35;
+    const area=meter>0&&depth>0?Math.round(meter*100*depth):0,unit=area>0?Math.round(area*p):0;
+    return `<tr class="data-row">
+      <td><select onchange="setSkRow(${i},'type',this.value)">
+        <option value="flad"${row.type==='flad'?'selected':''}>Ring & Kapsav</option>
+        <option value="vaeg"${row.type==='vaeg'?'selected':''}>Vægskæring</option>
+        <option value="gulv"${row.type==='gulv'?'selected':''}>Gulvskæring</option>
+      </select></td>
+      <td><input type="number" placeholder="m" value="${row.meter}" step="0.1" oninput="setSkRow(${i},'meter',this.value)"></td>
+      <td><input type="number" placeholder="cm" value="${row.depth}" min="1" oninput="setSkRow(${i},'depth',this.value)">
+        ${area>0?`<div style="font-size:.7rem;color:var(--muted)">${area.toLocaleString('da')} cm²</div>`:''}
+      </td>
+      <td><input type="number" value="${row.qty}" min="1" style="max-width:55px" oninput="setSkRow(${i},'qty',parseInt(this.value)||1)"></td>
+      <td class="row-total">${unit*qty>0?(unit*qty).toLocaleString('da')+' kr':'–'}</td>
+      <td><button class="rm-btn" onclick="removeSkRow(${i})">✕</button></td>
+    </tr>`;
+  }).join('');
+  calcSkaeringSubtotal();
+}
+function setSkRow(i,k,v){skaeringRows[i][k]=v;renderSkaeringTable();}
+function addSkaeringRow(){skaeringRows.push({type:'flad',meter:'',depth:'',qty:1});renderSkaeringTable();}
+function removeSkRow(i){if(skaeringRows.length===1){skaeringRows=[{type:'flad',meter:'',depth:'',qty:1}];}else{skaeringRows.splice(i,1);}renderSkaeringTable();}
+function calcSkaeringSubtotal(){
+  let t=0;
+  skaeringRows.forEach(r=>{
+    const m=parseFloat(r.meter)||0,d=parseFloat(r.depth)||0,q=parseInt(r.qty)||1;
+    const pKey={flad:'pFlad',vaeg:'pVaeg',gulv:'pGulv'}[r.type],p=settings[pKey]||0.35;
+    if(m>0&&d>0)t+=Math.round(m*100*d*p)*q;
+  });
+  document.getElementById('skaering-subtotal').textContent=t>0?`${t.toLocaleString('da')} kr`:'0 kr';
+}
+function commitSkaering(){
+  const names={flad:'Ring & Kapsav',vaeg:'Vægskæring',gulv:'Gulvskæring'};
+  const activeChecks=Object.entries(cbState.s).filter(([,v])=>v).map(([k])=>cbLabels[k]);
+  const tillæg=activeChecks.length?` [${activeChecks.join(', ')}]`:'';
+  let added=0;
+  skaeringRows.forEach(r=>{
+    const m=parseFloat(r.meter)||0,d=parseFloat(r.depth)||0,q=parseInt(r.qty)||1;
+    if(!m||!d)return;
+    const pKey={flad:'pFlad',vaeg:'pVaeg',gulv:'pGulv'}[r.type],p=settings[pKey]||0.35;
+    const area=Math.round(m*100*d),unit=Math.round(area*p);
+    lineItems.push({type:'skaering',desc:`${names[r.type]}, ${m}m × ${d}cm = ${area.toLocaleString('da')} cm²${tillæg}`,qty:q,unitPrice:unit,total:unit*q});
+    added++;
+  });
+  if(cbState.s.vaegsaw)lineItems.push({type:'tillæg',desc:'Oprigningstillæg – Vægsav',qty:1,unitPrice:settings.pVaegsaw,total:settings.pVaegsaw});
+  if(cbState.s.gulvsav)lineItems.push({type:'tillæg',desc:'Oprigningstillæg – Gulvsav',qty:1,unitPrice:settings.pGulvsav,total:settings.pGulvsav});
+  if(cbState.s.ringsav)lineItems.push({type:'tillæg',desc:'Oprigningstillæg – Ring & Kapsav (skæring)',qty:1,unitPrice:settings.pOprigS,total:settings.pOprigS});
+  if(added===0){alert('Udfyld mindst én linje med meter og dybde.');return;}
+  hasSkaering=true;renderInvoice();showPage('faktura');
+}
+
+// ── Invoice ────────────────────────────────────────────
+function removeItem(i){lineItems.splice(i,1);hasBoring=lineItems.some(x=>x.type==='boring');hasSkaering=lineItems.some(x=>x.type==='skaering');renderInvoice();}
+function renderInvoice(){
+  const wrap=document.getElementById('line-items'),badge=document.getElementById('item-badge');
+  if(lineItems.length===0){wrap.innerHTML='<div class="empty-msg">Ingen ydelser tilføjet endnu.</div>';document.getElementById('faktura-totals').style.display='none';badge.style.display='none';return;}
+  badge.style.display='inline-flex';badge.textContent=lineItems.length;
+  wrap.innerHTML=lineItems.map((item,i)=>`
+    <div class="line-item">
+      <div class="desc">${item.desc}${item.qty>1?`<br><small style="color:var(--muted)">${item.qty} stk × ${item.unitPrice.toLocaleString('da')} kr</small>`:''}</div>
+      <div class="price">${item.total.toLocaleString('da')} kr</div>
+      <button class="rm-btn" onclick="removeItem(${i})">✕</button>
+    </div>`).join('');
+  const sub=lineItems.reduce((s,x)=>s+x.total,0),start=settings.pStart||0;
+  const totalEx=sub+start,moms=Math.round(totalEx*.25),grand=totalEx+moms;
+  document.getElementById('subtotal-val').textContent=`${sub.toLocaleString('da')} kr`;
+  document.getElementById('start-row').style.display=start>0?'flex':'none';
+  document.getElementById('startgebyr-val').textContent=`${start.toLocaleString('da')} kr`;
+  document.getElementById('total-ex-val').textContent=`${totalEx.toLocaleString('da')} kr`;
+  document.getElementById('moms-val').textContent=`${moms.toLocaleString('da')} kr`;
+  document.getElementById('grand-val').textContent=`${grand.toLocaleString('da')} kr`;
+  document.getElementById('faktura-totals').style.display='block';
+}
+
+// ── Settings bor list ──────────────────────────────────
+function renderBoringPriceList(){
+  const wrap=document.getElementById('boring-price-list');
+  if(!borDiameters.length){wrap.innerHTML='<div class="empty-msg">Ingen bor.</div>';return;}
+  wrap.innerHTML=borDiameters.map((b,i)=>`
+    <div class="bor-grid-row">
+      <span style="font-weight:700;font-size:.85rem">${diaLabel(b)}</span>
+      <input type="number" value="${b.rate}" min="0" step="0.25"
+        oninput="borDiameters[${i}].rate=parseFloat(this.value)||0;saveDiameters();renderBoringTable()">
+      <button class="rm-btn" title="Fjern" onclick="removeDia(${i})">✕</button>
+    </div>`).join('');
+}
+function addBorDia(){
+  const dia=parseFloat(document.getElementById('new-dia').value),rate=parseFloat(document.getElementById('new-rate').value);
+  if(!dia||!rate){alert('Angiv diameter og kr/cm.');return;}
+  if(borDiameters.find(b=>b.dia===dia)){alert('Diameter findes allerede.');return;}
+  borDiameters.push({dia,rate});
+  borDiameters.sort((a,b)=>{const na=a.dia==='0-92'?0:parseFloat(a.dia),nb=b.dia==='0-92'?0:parseFloat(b.dia);return na-nb;});
+  document.getElementById('new-dia').value='';document.getElementById('new-rate').value='';
+  saveDiameters();renderBoringPriceList();renderBoringTable();
+}
+function removeDia(i){if(!confirm(`Fjern ${diaLabel(borDiameters[i])}?`))return;borDiameters.splice(i,1);saveDiameters();renderBoringPriceList();renderBoringTable();}
+
+function printFaktura(){window.print();}
+function clearFaktura(){if(confirm('Ryd hele fakturaen?')){lineItems=[];hasBoring=false;hasSkaering=false;renderInvoice();}}
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  ['boring','skaering','tid','faktura','indstillinger'].forEach((n,i)=>{if(n===name)document.querySelectorAll('.tab')[i].classList.add('active');});
+}
+</script>
+</body>
+</html>
