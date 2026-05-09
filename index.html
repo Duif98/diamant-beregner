@@ -6,6 +6,7 @@
 <title>DiamantPro – Prisberegner</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@page{margin:1.2cm;size:A4;}
 
 :root{
   --bg:#0f1117;--surface:#1a1d27;--surface2:#212533;--surface3:#272b3a;
@@ -18,17 +19,13 @@
   --radius:14px;--radius-sm:9px;--radius-lg:20px;
   --font:'Inter',system-ui,sans-serif;
 }
-
 *{box-sizing:border-box;margin:0;padding:0;}
 html{-webkit-tap-highlight-color:transparent;}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;}
-
-/* ── Scrollbar ── */
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
 
-/* ── Header ── */
 .app-header{
   background:var(--surface);border-bottom:1px solid var(--border);
   padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
@@ -41,264 +38,149 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   display:flex;align-items:center;justify-content:center;font-size:1.1rem;
   box-shadow:0 4px 16px var(--accent-glow);flex-shrink:0;
 }
-.header-title{font-size:.95rem;font-weight:700;letter-spacing:-.02em;color:var(--text);}
+.header-title{font-size:.95rem;font-weight:700;letter-spacing:-.02em;}
 .header-sub{font-size:.72rem;color:var(--text2);margin-top:1px;font-weight:500;}
-.header-badge{
-  background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-glow);
-  border-radius:99px;padding:3px 10px;font-size:.7rem;font-weight:700;letter-spacing:.04em;
-}
+.header-badge{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-glow);border-radius:99px;padding:3px 10px;font-size:.7rem;font-weight:700;letter-spacing:.04em;}
 
-/* ── Tab bar ── */
-.tab-bar{
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:0 12px;display:flex;gap:2px;overflow-x:auto;
-}
+.tab-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 12px;display:flex;gap:2px;overflow-x:auto;}
 .tab-bar::-webkit-scrollbar{height:0;}
-.tab{
-  padding:12px 14px;font-size:.75rem;font-weight:600;color:var(--text3);
-  cursor:pointer;border:none;background:transparent;white-space:nowrap;
-  border-bottom:2px solid transparent;transition:all .18s;letter-spacing:.01em;
-  display:flex;align-items:center;gap:5px;
-}
+.tab{padding:12px 14px;font-size:.75rem;font-weight:600;color:var(--text3);cursor:pointer;border:none;background:transparent;white-space:nowrap;border-bottom:2px solid transparent;transition:all .18s;letter-spacing:.01em;display:flex;align-items:center;gap:5px;}
 .tab:hover{color:var(--text2);}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-.tab-count{
-  background:var(--accent);color:#fff;border-radius:99px;
-  min-width:18px;height:18px;font-size:.65rem;font-weight:800;
-  display:inline-flex;align-items:center;justify-content:center;padding:0 5px;
-}
+.tab-count{background:var(--accent);color:#fff;border-radius:99px;min-width:18px;height:18px;font-size:.65rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center;padding:0 5px;}
 
-/* ── Pages ── */
 .page{display:none;padding:20px 16px;max-width:720px;margin:0 auto;}
 .page.active{display:block;}
 
-/* ── Cards ── */
-.card{
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
-  padding:20px;margin-bottom:14px;
-}
-.card-title{
-  font-size:.8rem;font-weight:700;color:var(--text2);text-transform:uppercase;
-  letter-spacing:.08em;margin-bottom:16px;display:flex;align-items:center;gap:8px;
-}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:14px;}
+.card-title{font-size:.8rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
 .card-title::before{content:'';width:3px;height:14px;background:var(--accent);border-radius:99px;}
+.section-label{font-size:.7rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;margin-top:14px;}
 
-/* ── Section labels ── */
-.section-label{
-  font-size:.7rem;font-weight:700;color:var(--text3);text-transform:uppercase;
-  letter-spacing:.08em;margin-bottom:8px;margin-top:14px;
-}
-
-/* ── Form ── */
-.field label{
-  display:block;font-size:.72rem;font-weight:600;color:var(--text2);
-  margin-bottom:5px;letter-spacing:.03em;
-}
-input,select{
-  width:100%;padding:10px 13px;
-  background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);
-  color:var(--text);font-family:var(--font);font-size:.88rem;font-weight:500;
-  transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none;
-}
+.field label{display:block;font-size:.72rem;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:.03em;}
+input,select{width:100%;padding:10px 13px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font);font-size:.88rem;font-weight:500;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none;}
 input::placeholder{color:var(--text3);}
-input:focus,select:focus{
-  outline:none;border-color:var(--accent);
-  box-shadow:0 0 0 3px var(--accent-dim);
-  background:var(--surface3);
-}
+input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim);background:var(--surface3);}
 input[readonly]{background:var(--surface);color:var(--text2);cursor:default;}
 input[readonly]:focus{border-color:var(--border);box-shadow:none;}
-select{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238b92a8' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 12px center;padding-right:30px;
-  cursor:pointer;
-}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238b92a8' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px;cursor:pointer;}
 select option{background:var(--surface2);}
 
-/* ── Buttons ── */
-.btn{
-  display:block;width:100%;padding:12px 18px;border-radius:var(--radius-sm);border:none;
-  font-family:var(--font);font-size:.85rem;font-weight:700;cursor:pointer;margin-top:12px;
-  transition:all .18s;letter-spacing:.01em;
-}
-.btn-primary{
-  background:linear-gradient(135deg,var(--accent) 0%,#ff3d00 100%);color:#fff;
-  box-shadow:0 4px 20px var(--accent-glow);
-}
+.btn{display:block;width:100%;padding:12px 18px;border-radius:var(--radius-sm);border:none;font-family:var(--font);font-size:.85rem;font-weight:700;cursor:pointer;margin-top:12px;transition:all .18s;letter-spacing:.01em;}
+.btn-primary{background:linear-gradient(135deg,var(--accent) 0%,#ff3d00 100%);color:#fff;box-shadow:0 4px 20px var(--accent-glow);}
 .btn-primary:hover{box-shadow:0 6px 28px rgba(255,107,53,0.5);transform:translateY(-1px);}
 .btn-primary:active{transform:translateY(0);}
-.btn-ghost{
-  background:var(--surface2);color:var(--text2);border:1.5px solid var(--border2);
-}
-.btn-ghost:hover{border-color:var(--border2);color:var(--text);background:var(--surface3);}
-.btn-success{
-  background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;
-  box-shadow:0 4px 20px rgba(34,197,94,0.25);
-}
+.btn-ghost{background:var(--surface2);color:var(--text2);border:1.5px solid var(--border2);}
+.btn-ghost:hover{color:var(--text);background:var(--surface3);}
+.btn-success{background:linear-gradient(135deg,var(--green),#16a34a);color:#fff;box-shadow:0 4px 20px rgba(34,197,94,0.25);}
 .btn-success:hover{box-shadow:0 6px 28px rgba(34,197,94,0.4);transform:translateY(-1px);}
 .btn-danger{background:var(--red-dim);color:var(--red);border:1.5px solid rgba(239,68,68,.2);}
 .btn-danger:hover{background:rgba(239,68,68,.12);}
-.btn-sm{
-  padding:7px 13px;border-radius:8px;font-size:.78rem;font-weight:700;
-  cursor:pointer;border:none;font-family:var(--font);transition:all .15s;
-}
-.btn-add-row{
-  width:100%;padding:9px;margin-top:10px;border-radius:var(--radius-sm);border:none;
-  background:transparent;border:1.5px dashed var(--border2);color:var(--text3);
-  font-family:var(--font);font-size:.8rem;font-weight:600;cursor:pointer;
-  transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px;
-}
+.btn-sm{padding:7px 13px;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;border:none;font-family:var(--font);transition:all .15s;}
+.btn-add-row{width:100%;padding:9px;margin-top:10px;border-radius:var(--radius-sm);border:1.5px dashed var(--border2);background:transparent;color:var(--text3);font-family:var(--font);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px;}
 .btn-add-row:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-dim);}
 
-/* ── Grid ── */
+/* Added to tilbud confirmation flash */
+.added-flash{
+  display:none;align-items:center;gap:8px;margin-top:10px;padding:10px 14px;
+  background:var(--green-dim);border:1px solid rgba(34,197,94,.25);border-radius:var(--radius-sm);
+  font-size:.8rem;font-weight:600;color:var(--green);
+}
+.added-flash.show{display:flex;}
+
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
 .sep{height:1px;background:var(--border);margin:16px 0;}
 
-/* ── Checkboxes ── */
 .cb-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
-.cb-pill{
-  display:flex;align-items:center;gap:7px;padding:8px 14px;
-  background:var(--surface2);border:1.5px solid var(--border);border-radius:99px;
-  cursor:pointer;font-size:.8rem;font-weight:600;color:var(--text2);
-  transition:all .18s;user-select:none;white-space:nowrap;
-}
+.cb-pill{display:flex;align-items:center;gap:7px;padding:8px 14px;background:var(--surface2);border:1.5px solid var(--border);border-radius:99px;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--text2);transition:all .18s;user-select:none;white-space:nowrap;}
 .cb-pill:hover{border-color:var(--border2);color:var(--text);}
 .cb-pill.on{background:var(--accent-dim);border-color:var(--accent);color:var(--accent);}
 .cb-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:background .15s;flex-shrink:0;}
 .cb-pill.on .dot{background:var(--accent);}
-.cb-tag{
-  font-size:.64rem;font-weight:800;background:var(--accent);color:#fff;
-  border-radius:5px;padding:1px 6px;margin-left:2px;letter-spacing:.02em;
-}
+.cb-tag{font-size:.64rem;font-weight:800;background:var(--accent);color:#fff;border-radius:5px;padding:1px 6px;margin-left:2px;letter-spacing:.02em;}
 .cb-pill.on .cb-tag{background:rgba(255,255,255,0.25);}
 
-/* ── Table ── */
 .tbl-wrap{overflow-x:auto;margin:12px -4px 0;}
 table{width:100%;border-collapse:collapse;}
-thead th{
-  font-size:.67rem;font-weight:700;color:var(--text3);text-transform:uppercase;
-  letter-spacing:.06em;padding:6px 8px 10px;text-align:left;
-  border-bottom:1px solid var(--border);
-}
+thead th{font-size:.67rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:6px 8px 10px;text-align:left;border-bottom:1px solid var(--border);}
 tbody tr{transition:background .1s;}
 tbody tr:hover td{background:var(--surface2);}
 td{padding:5px 4px;vertical-align:top;}
-td input,td select{
-  padding:8px 9px;font-size:.82rem;border-radius:8px;
-  background:var(--surface2);border-color:var(--border);
-}
+td input,td select{padding:8px 9px;font-size:.82rem;border-radius:8px;background:var(--surface2);border-color:var(--border);}
 td input:focus,td select:focus{background:var(--surface3);}
-.td-right{text-align:right;}
-.td-price{
-  font-size:.85rem;font-weight:700;color:var(--accent);
-  text-align:right;white-space:nowrap;padding-right:6px;vertical-align:middle;
-}
+.td-price{font-size:.85rem;font-weight:700;color:var(--accent);text-align:right;white-space:nowrap;padding-right:6px;vertical-align:middle;}
 .row-hint{font-size:.67rem;color:var(--text3);margin-top:3px;}
-.rm-btn{
-  background:none;border:none;color:var(--text3);font-size:.9rem;cursor:pointer;
-  padding:5px 7px;border-radius:6px;transition:all .15s;display:block;
-}
+.rm-btn{background:none;border:none;color:var(--text3);font-size:.9rem;cursor:pointer;padding:5px 7px;border-radius:6px;transition:all .15s;display:block;}
 .rm-btn:hover{color:var(--red);background:var(--red-dim);}
 
-/* ── Subtotal bar ── */
-.subtotal-bar{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:14px 4px 0;margin-top:4px;border-top:1px solid var(--border);
-}
+.subtotal-bar{display:flex;justify-content:space-between;align-items:center;padding:14px 4px 0;margin-top:4px;border-top:1px solid var(--border);}
 .subtotal-label{font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;}
 .subtotal-amount{font-size:1.3rem;font-weight:800;color:var(--accent);letter-spacing:-.02em;}
 
-/* ── Info box ── */
-.infobox{
-  background:var(--blue-dim);border:1px solid rgba(79,142,247,.2);border-radius:var(--radius-sm);
-  padding:10px 13px;font-size:.78rem;color:#6fa8f8;margin-top:10px;
-  display:flex;gap:8px;align-items:flex-start;line-height:1.5;
-}
-.infobox-icon{flex-shrink:0;margin-top:1px;}
+.infobox{background:var(--blue-dim);border:1px solid rgba(79,142,247,.2);border-radius:var(--radius-sm);padding:10px 13px;font-size:.78rem;color:#6fa8f8;margin-top:10px;display:flex;gap:8px;align-items:flex-start;line-height:1.5;}
 
-/* ── Tid summary ── */
-.tid-calc{
-  background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);
-  padding:13px 15px;margin-top:12px;font-size:.82rem;line-height:1.9;display:none;
-}
+.tid-calc{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:13px 15px;margin-top:12px;font-size:.82rem;line-height:1.9;display:none;}
 .tid-calc .highlight{color:var(--accent);font-weight:700;}
-.tid-calc .total-line{
-  border-top:1px solid var(--border);margin-top:6px;padding-top:6px;
-  font-size:.9rem;font-weight:800;color:var(--text);
-}
+.tid-calc .total-line{border-top:1px solid var(--border);margin-top:6px;padding-top:6px;font-size:.9rem;font-weight:800;color:var(--text);}
 
-/* ── Invoice ── */
-.inv-item{
-  display:flex;justify-content:space-between;align-items:flex-start;
-  padding:11px 0;border-bottom:1px solid var(--border);gap:10px;
-}
+/* Tilbud (formerly faktura) */
+.inv-item{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border);gap:10px;}
 .inv-item:last-child{border-bottom:none;}
 .inv-desc{flex:1;font-size:.84rem;line-height:1.4;color:var(--text);}
 .inv-desc small{color:var(--text3);font-size:.75rem;display:block;margin-top:2px;}
 .inv-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .inv-price{font-size:.9rem;font-weight:700;color:var(--text);white-space:nowrap;}
-
-.inv-empty{
-  text-align:center;padding:36px 20px;color:var(--text3);
-  display:flex;flex-direction:column;align-items:center;gap:10px;
-}
+.inv-empty{text-align:center;padding:36px 20px;color:var(--text3);display:flex;flex-direction:column;align-items:center;gap:10px;}
 .inv-empty-icon{font-size:2.5rem;opacity:.4;}
 .inv-empty-text{font-size:.85rem;font-weight:500;}
-
-.totals-box{
-  background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);
-  padding:14px 16px;margin-top:12px;
-}
+.totals-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-top:12px;}
 .tot-row{display:flex;justify-content:space-between;padding:5px 0;font-size:.82rem;color:var(--text2);}
 .tot-row.main{color:var(--text);font-weight:700;font-size:.9rem;padding:8px 0 4px;}
-.grand-box{
-  margin-top:12px;padding:16px 18px;border-radius:var(--radius);
-  background:linear-gradient(135deg,var(--accent) 0%,#ff3d00 100%);
-  display:flex;justify-content:space-between;align-items:center;
-  box-shadow:0 8px 32px var(--accent-glow);
-}
+.grand-box{margin-top:12px;padding:16px 18px;border-radius:var(--radius);background:linear-gradient(135deg,var(--accent) 0%,#ff3d00 100%);display:flex;justify-content:space-between;align-items:center;box-shadow:0 8px 32px var(--accent-glow);}
 .grand-box .lbl{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:.06em;}
 .grand-box .val{font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-.03em;}
 
-/* ── Settings list ── */
-.bor-list-head{
-  display:grid;grid-template-columns:100px 1fr 34px;gap:6px;
-  font-size:.67rem;font-weight:700;color:var(--text3);text-transform:uppercase;
-  letter-spacing:.06em;padding:0 0 8px;border-bottom:1px solid var(--border);margin-bottom:2px;
+/* Historik */
+.hist-empty{text-align:center;padding:40px 20px;color:var(--text3);display:flex;flex-direction:column;align-items:center;gap:10px;}
+.hist-empty-icon{font-size:2.5rem;opacity:.4;}
+.hist-item{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;margin-bottom:10px;cursor:pointer;transition:all .18s;
 }
-.bor-list-row{
-  display:grid;grid-template-columns:100px 1fr 34px;gap:6px;
-  align-items:center;padding:5px 0;border-bottom:1px solid var(--border);
+.hist-item:hover{border-color:var(--border2);background:var(--surface2);}
+.hist-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.hist-name{font-size:.9rem;font-weight:700;color:var(--text);}
+.hist-date{font-size:.72rem;color:var(--text3);white-space:nowrap;}
+.hist-lines{font-size:.78rem;color:var(--text2);margin-top:6px;line-height:1.6;}
+.hist-total{font-size:1rem;font-weight:800;color:var(--accent);margin-top:8px;}
+.hist-actions{display:flex;gap:8px;margin-top:10px;}
+.hist-btn{
+  flex:1;padding:8px;border-radius:8px;border:none;font-family:var(--font);
+  font-size:.78rem;font-weight:700;cursor:pointer;transition:all .15s;
 }
+.hist-btn-load{background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-glow);}
+.hist-btn-load:hover{background:rgba(255,107,53,.2);}
+.hist-btn-del{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.15);}
+.hist-btn-del:hover{background:rgba(239,68,68,.15);}
+
+/* Settings */
+.bor-list-head{display:grid;grid-template-columns:100px 1fr 34px;gap:6px;font-size:.67rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;padding:0 0 8px;border-bottom:1px solid var(--border);margin-bottom:2px;}
+.bor-list-row{display:grid;grid-template-columns:100px 1fr 34px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);}
 .bor-list-row:last-child{border-bottom:none;}
 .bor-list-row .dia{font-size:.82rem;font-weight:700;color:var(--text);}
 
-/* ── Save toast ── */
-.toast{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);
-  background:var(--green);color:#fff;padding:9px 18px;border-radius:99px;
-  font-size:.8rem;font-weight:700;opacity:0;transition:all .25s;pointer-events:none;
-  box-shadow:0 4px 20px rgba(34,197,94,0.4);z-index:999;white-space:nowrap;
-}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--green);color:#fff;padding:9px 18px;border-radius:99px;font-size:.8rem;font-weight:700;opacity:0;transition:all .25s;pointer-events:none;box-shadow:0 4px 20px rgba(34,197,94,0.4);z-index:999;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-@media(max-width:480px){
-  .g3{grid-template-columns:1fr 1fr;}
-  .page{padding:14px 12px;}
-  .card{padding:16px;}
-  .grand-box .val{font-size:1.25rem;}
-}
-@page{margin:1.2cm;size:A4;}
+@media(max-width:480px){.g3{grid-template-columns:1fr 1fr;}.page{padding:14px 12px;}.card{padding:16px;}.grand-box .val{font-size:1.25rem;}}
+
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-  .app-header,.tab-bar,.page:not(#page-faktura),.btn{display:none!important;}
+  .app-header,.tab-bar,.page:not(#page-tilbud),.btn,.hist-actions{display:none!important;}
   body{background:#fff!important;color:#111!important;font-size:13px;}
-  #page-faktura{display:block!important;padding:0;max-width:100%;}
-
-  /* Print header */
+  #page-tilbud{display:block!important;padding:0;max-width:100%;}
   #print-header{display:block!important;}
-
   .card{background:#fff!important;border:1px solid #ddd!important;box-shadow:none!important;margin-bottom:10px;border-radius:6px!important;padding:14px!important;}
   .card-title{color:#444!important;border-bottom:1px solid #eee;padding-bottom:8px;margin-bottom:12px;}
   .card-title::before{background:#e05a1e!important;}
@@ -310,15 +192,11 @@ td input:focus,td select:focus{background:var(--surface3);}
   .totals-box{background:#f8f8f8!important;border:1px solid #ddd!important;border-radius:6px!important;}
   .tot-row{color:#444!important;}
   .tot-row.main{color:#111!important;}
-  .grand-box{
-    background:#e05a1e!important;border-radius:8px!important;
-    box-shadow:none!important;padding:14px 16px!important;
-  }
+  .grand-box{background:#e05a1e!important;border-radius:8px!important;box-shadow:none!important;padding:14px 16px!important;}
   .grand-box .lbl{color:rgba(255,255,255,.8)!important;}
   .grand-box .val{color:#fff!important;}
-  input[readonly]{background:#f8f8f8!important;border:1px solid #ddd!important;color:#111!important;}
-  input[type=text],input[type=number],input[type=date]{background:#f8f8f8!important;border:1px solid #ddd!important;color:#111!important;}
-  .inv-empty{display:none;}
+  input[readonly],input[type=text],input[type=number],input[type=date]{background:#f8f8f8!important;border:1px solid #ddd!important;color:#111!important;}
+  .inv-empty,.added-flash{display:none!important;}
 }
 </style>
 </head>
@@ -341,8 +219,9 @@ td input:focus,td select:focus{background:var(--surface3);}
   <button class="tab active" onclick="showPage('boring')">🔩 Boring</button>
   <button class="tab" onclick="showPage('skaering')">🔪 Skæring</button>
   <button class="tab" onclick="showPage('tid')">⏱ Tid & Kørsel</button>
-  <button class="tab" onclick="showPage('faktura')">🧾 Faktura <span id="item-badge" style="display:none" class="tab-count">0</span></button>
+  <button class="tab" onclick="showPage('tilbud')">📄 Tilbud <span id="item-badge" style="display:none" class="tab-count">0</span></button>
   <button class="tab" onclick="showPage('indstillinger')">⚙ Priser</button>
+  <button class="tab" onclick="showPage('historik')">🕓 Historik <span id="hist-badge" style="display:none" class="tab-count">0</span></button>
 </nav>
 
 <!-- ══ BORING ══ -->
@@ -371,9 +250,10 @@ td input:focus,td select:focus{background:var(--surface3);}
       <span class="subtotal-label">Subtotal boring</span>
       <span class="subtotal-amount" id="boring-subtotal">0 kr</span>
     </div>
-    <button class="btn btn-primary" onclick="commitBoring()">Føj boringer til faktura →</button>
+    <div class="added-flash" id="flash-boring">✓ Boringer tilføjet til tilbud</div>
+    <button class="btn btn-primary" onclick="commitBoring()">+ Føj boringer til tilbud</button>
   </div>
-  <div class="infobox"><span class="infobox-icon">ℹ</span>Minimum fakturering: 20 cm dybde pr. boring. Pris = dybde (cm) × kr/cm.</div>
+  <div class="infobox"><span>ℹ</span>Minimum fakturering: 20 cm dybde pr. boring. Pris = dybde (cm) × kr/cm.</div>
 </div>
 
 <!-- ══ SKÆRING ══ -->
@@ -401,7 +281,8 @@ td input:focus,td select:focus{background:var(--surface3);}
       <span class="subtotal-label">Subtotal skæring</span>
       <span class="subtotal-amount" id="skaering-subtotal">0 kr</span>
     </div>
-    <button class="btn btn-primary" onclick="commitSkaering()">Føj skæring til faktura →</button>
+    <div class="added-flash" id="flash-skaering">✓ Skæring tilføjet til tilbud</div>
+    <button class="btn btn-primary" onclick="commitSkaering()">+ Føj skæring til tilbud</button>
   </div>
 </div>
 
@@ -421,9 +302,9 @@ td input:focus,td select:focus{background:var(--surface3);}
       <div class="field"><label>Overtid (timer)</label><input type="number" id="t-over" placeholder="0" min="0" step="0.5"></div>
     </div>
     <div id="tid-summary" class="tid-calc"></div>
-    <button class="btn btn-primary" style="margin-top:14px" onclick="commitTid()">Føj tid til faktura →</button>
+    <div class="added-flash" id="flash-tid">✓ Tid tilføjet til tilbud</div>
+    <button class="btn btn-primary" style="margin-top:14px" onclick="commitTid()">+ Føj tid til tilbud</button>
   </div>
-
   <div class="card">
     <div class="card-title">Kørsel</div>
     <div class="g2">
@@ -431,13 +312,14 @@ td input:focus,td select:focus{background:var(--surface3);}
       <div class="field"><label>Beregnet pris</label><input type="text" id="k-price-display" readonly placeholder="—"></div>
     </div>
     <div id="k-breakdown" style="font-size:.76rem;color:var(--text3);margin-top:7px;"></div>
-    <button class="btn btn-primary" onclick="commitKorsel()">Føj kørsel til faktura →</button>
+    <div class="added-flash" id="flash-korsel">✓ Kørsel tilføjet til tilbud</div>
+    <button class="btn btn-primary" onclick="commitKorsel()">+ Føj kørsel til tilbud</button>
   </div>
 </div>
 
-<!-- ══ FAKTURA ══ -->
-<div id="page-faktura" class="page">
-  <!-- Kun synlig ved print -->
+<!-- ══ TILBUD ══ -->
+<div id="page-tilbud" class="page">
+  <!-- Print header -->
   <div id="print-header" style="display:none;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #e05a1e;">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;">
       <div>
@@ -445,19 +327,17 @@ td input:focus,td select:focus{background:var(--surface3);}
         <div style="font-size:.85rem;color:#555;margin-top:4px" id="ph-adresse">—</div>
       </div>
       <div style="text-align:right;font-size:.82rem;color:#555;line-height:1.8">
-        <div><strong style="color:#111">Faktura nr:</strong> <span id="ph-nr">—</span></div>
+        <div><strong style="color:#111">Tilbud nr:</strong> <span id="ph-nr">—</span></div>
         <div><strong style="color:#111">Dato:</strong> <span id="ph-dato">—</span></div>
         <div><strong style="color:#111">Betalingsfrist:</strong> <span id="ph-frist">—</span> dage</div>
       </div>
     </div>
   </div>
+
   <div class="card">
-    <div class="card-title">Ydelser</div>
+    <div class="card-title">Tilbudsoversigt</div>
     <div id="line-items">
-      <div class="inv-empty">
-        <div class="inv-empty-icon">🧾</div>
-        <div class="inv-empty-text">Ingen ydelser tilføjet endnu</div>
-      </div>
+      <div class="inv-empty"><div class="inv-empty-icon">📄</div><div class="inv-empty-text">Ingen ydelser tilføjet endnu</div></div>
     </div>
     <div id="faktura-totals" style="display:none">
       <div class="totals-box">
@@ -466,10 +346,7 @@ td input:focus,td select:focus{background:var(--surface3);}
         <div class="tot-row main"><span>I alt ex. moms</span><span id="total-ex-val">—</span></div>
         <div class="tot-row"><span>Moms 25%</span><span id="moms-val">—</span></div>
       </div>
-      <div class="grand-box">
-        <div class="lbl">Total inkl. moms</div>
-        <div class="val" id="grand-val">—</div>
-      </div>
+      <div class="grand-box"><div class="lbl">Total inkl. moms</div><div class="val" id="grand-val">—</div></div>
     </div>
   </div>
 
@@ -478,14 +355,15 @@ td input:focus,td select:focus{background:var(--surface3);}
     <div class="field"><label>Kundenavn / Firma</label><input type="text" id="f-kunde" placeholder="Navn eller firmanavn"></div>
     <div class="field"><label>Adresse</label><input type="text" id="f-adresse" placeholder="Vej, by"></div>
     <div class="g2">
-      <div class="field"><label>Fakturanummer</label><input type="text" id="f-nr" placeholder="fx 2024-001"></div>
+      <div class="field"><label>Tilbudsnummer</label><input type="text" id="f-nr" placeholder="fx 2024-001"></div>
       <div class="field"><label>Dato</label><input type="date" id="f-dato"></div>
     </div>
     <div class="field"><label>Betalingsfrist (dage)</label><input type="number" id="f-frist" value="14"></div>
   </div>
 
-  <button class="btn btn-success" onclick="printFaktura()">🖨 Print / Gem som PDF</button>
-  <button class="btn btn-danger" onclick="clearFaktura()">🗑 Ryd faktura</button>
+  <button class="btn btn-success" onclick="saveTilbudToHistory();printTilbud()">🖨 Print / Gem tilbud som PDF</button>
+  <button class="btn btn-ghost" onclick="saveTilbudToHistory()" style="margin-top:8px">💾 Gem tilbud i historik</button>
+  <button class="btn btn-danger" onclick="clearTilbud()">🗑 Ryd tilbud</button>
 </div>
 
 <!-- ══ INDSTILLINGER ══ -->
@@ -499,10 +377,9 @@ td input:focus,td select:focus{background:var(--surface3);}
     <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:flex-end;margin-top:6px">
       <div class="field"><label>Diameter (mm)</label><input type="number" id="new-dia" placeholder="fx 175" min="1"></div>
       <div class="field"><label>Kr/cm</label><input type="number" id="new-rate" placeholder="fx 35" step="0.25"></div>
-      <button class="btn-sm btn-primary" onclick="addBorDia()" style="height:40px;margin-top:auto;background:linear-gradient(135deg,var(--accent),#ff3d00);color:#fff;box-shadow:0 2px 10px var(--accent-glow)">+ Tilføj</button>
+      <button class="btn-sm" onclick="addBorDia()" style="height:40px;margin-top:auto;background:linear-gradient(135deg,var(--accent),#ff3d00);color:#fff;box-shadow:0 2px 10px var(--accent-glow)">+ Tilføj</button>
     </div>
   </div>
-
   <div class="card">
     <div class="card-title">Skæring – kr/cm²</div>
     <div class="g3">
@@ -511,18 +388,16 @@ td input:focus,td select:focus{background:var(--surface3);}
       <div class="field"><label>Gulvskæring</label><input type="number" id="p-gulv" step="0.01" oninput="saveSettings()"></div>
     </div>
   </div>
-
   <div class="card">
     <div class="card-title">Timepriser</div>
     <div class="g2">
       <div class="field"><label>Inkl. diamantværktøj (kr/t)</label><input type="number" id="p-dia-normal" step="10" oninput="saveSettings()"></div>
       <div class="field"><label>Uden diamantværktøj (kr/t)</label><input type="number" id="p-norm-normal" step="10" oninput="saveSettings()"></div>
     </div>
-    <div style="max-width:48%;padding-right:5px">
+    <div style="max-width:48%">
       <div class="field"><label>Overtidstillæg (kr/t, oven i)</label><input type="number" id="p-over" step="10" oninput="saveSettings()"></div>
     </div>
   </div>
-
   <div class="card">
     <div class="card-title">Kørsel</div>
     <div class="g2">
@@ -530,7 +405,6 @@ td input:focus,td select:focus{background:var(--surface3);}
       <div class="field"><label>Kr/km over 25 km</label><input type="number" id="p-km-extra" step="0.5" oninput="saveSettings()"></div>
     </div>
   </div>
-
   <div class="card">
     <div class="card-title">Gebyrer & Oprigningstillæg</div>
     <div class="field"><label>Startgebyr (kr ex. moms)</label><input type="number" id="p-start" oninput="saveSettings()"></div>
@@ -546,8 +420,18 @@ td input:focus,td select:focus{background:var(--surface3);}
       <div class="field"><label>Ring & Kapsav (skæring)</label><input type="number" id="p-oprig-s" oninput="saveSettings()"></div>
     </div>
   </div>
-
   <button class="btn btn-ghost" onclick="resetAll()" style="margin-bottom:20px">↺ Nulstil alle priser til standard</button>
+</div>
+
+<!-- ══ HISTORIK ══ -->
+<div id="page-historik" class="page">
+  <div class="card">
+    <div class="card-title">Opgavehistorik</div>
+    <div id="hist-list">
+      <div class="hist-empty"><div class="hist-empty-icon">🕓</div><div style="font-size:.85rem;font-weight:500">Ingen gemte tilbud endnu</div><div style="font-size:.78rem;color:var(--text3)">Gem et tilbud fra Tilbud-fanen</div></div>
+    </div>
+  </div>
+  <button class="btn btn-danger" onclick="clearHistory()" style="margin-bottom:20px">🗑 Ryd al historik</button>
 </div>
 
 <script>
@@ -568,13 +452,9 @@ const DEFAULT_DIAMETERS=[
   {dia:800,rate:167.00},{dia:820,rate:169.50},{dia:850,rate:175.50},
   {dia:900,rate:212.00},{dia:1000,rate:272.50},{dia:1100,rate:319.00},
 ];
-const DEF={
-  pFlad:.50,pVaeg:.35,pGulv:.25,pDiaNormal:780,pNormNormal:490,pOver:245,
-  pKmFast:425,pKmExtra:8.5,pStart:0,pBoregrej:330,pVaegsaw:660,pGulvsav:660,pOprigB:330,pOprigS:330,
-};
+const DEF={pFlad:.50,pVaeg:.35,pGulv:.25,pDiaNormal:780,pNormNormal:490,pOver:245,pKmFast:425,pKmExtra:8.5,pStart:0,pBoregrej:330,pVaegsaw:660,pGulvsav:660,pOprigB:330,pOprigS:330};
 
-let bd=[],st={};
-let items=[],hasBor=false,hasSk=false;
+let bd=[],st={},items=[],history=[];
 let bRows=[{dia:'0-92',depthRaw:'',qty:1}];
 let sRows=[{type:'flad',meter:'',depth:'',qty:1}];
 const cb={b:{boregrej:false,ringsav:false,skra:false,underop:false},s:{vaegsaw:false,gulvsav:false,ringsav:false}};
@@ -583,19 +463,21 @@ const cbL={boregrej:'Boregrej',ringsav:'Ring & kapsav',skra:'Skråboring (+25%)'
 function load(){
   try{const d=localStorage.getItem('diam_d');bd=d?JSON.parse(d):J(DEFAULT_DIAMETERS);}catch{bd=J(DEFAULT_DIAMETERS);}
   try{const s=localStorage.getItem('diam_s');st=s?{...DEF,...JSON.parse(s)}:{...DEF};}catch{st={...DEF};}
+  try{const h=localStorage.getItem('diam_h');history=h?JSON.parse(h):[];}catch{history=[];}
 }
 function J(x){return JSON.parse(JSON.stringify(x));}
 function gV(id){return parseFloat(document.getElementById(id)?.value)||0;}
 function sV(id,v){const e=document.getElementById(id);if(e)e.value=v;}
+function fmt(n){return n.toLocaleString('da');}
 
-function saveD(){localStorage.setItem('diam_d',JSON.stringify(bd));toast();}
+function saveD(){localStorage.setItem('diam_d',JSON.stringify(bd));showToast('✓ Bor gemt');}
 function saveSettings(){
-  ['pFlad','pVaeg','pGulv'].forEach((k,i)=>st[k]=gV(['p-flad','p-vaeg','p-gulv'][i]));
+  st.pFlad=gV('p-flad');st.pVaeg=gV('p-vaeg');st.pGulv=gV('p-gulv');
   st.pDiaNormal=gV('p-dia-normal');st.pNormNormal=gV('p-norm-normal');st.pOver=gV('p-over');
   st.pKmFast=gV('p-km-fast');st.pKmExtra=gV('p-km-extra');st.pStart=gV('p-start');
   st.pBoregrej=gV('p-boregrej');st.pVaegsaw=gV('p-vaegsaw');st.pGulvsav=gV('p-gulvsav');
   st.pOprigB=gV('p-oprig-b');st.pOprigS=gV('p-oprig-s');
-  localStorage.setItem('diam_s',JSON.stringify(st));toast();
+  localStorage.setItem('diam_s',JSON.stringify(st));showToast('✓ Priser gemt');
 }
 function applyUI(){
   sV('p-flad',st.pFlad);sV('p-vaeg',st.pVaeg);sV('p-gulv',st.pGulv);
@@ -604,72 +486,53 @@ function applyUI(){
   sV('p-boregrej',st.pBoregrej);sV('p-vaegsaw',st.pVaegsaw);sV('p-gulvsav',st.pGulvsav);
   sV('p-oprig-b',st.pOprigB);sV('p-oprig-s',st.pOprigS);
 }
-function toast(){
-  const t=document.getElementById('toast');t.classList.add('show');
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1800);
+}
+function flash(id){
+  const el=document.getElementById(id);if(!el)return;
+  el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2500);
 }
 function resetAll(){
   if(!confirm('Nulstil alle priser?'))return;
   bd=J(DEFAULT_DIAMETERS);st={...DEF};
   localStorage.setItem('diam_d',JSON.stringify(bd));localStorage.setItem('diam_s',JSON.stringify(st));
-  applyUI();renderBorList();renderBorTable();alert('Nulstillet ✓');
+  applyUI();renderBorList();renderBorTable();showToast('✓ Nulstillet');
 }
 
 load();applyUI();
 document.getElementById('f-dato').value=new Date().toISOString().split('T')[0];
-renderBorList();renderBorTable();renderSkTable();
+renderBorList();renderBorTable();renderSkTable();renderHistory();
 ['t-dia-normal','t-dia-over','t-norm','t-over'].forEach(id=>document.getElementById(id).addEventListener('input',updateTidCalc));
 document.getElementById('k-km').addEventListener('input',updateKm);
 
-// ── Helpers ──────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────
 function diaLbl(b){return b.label||`Ø${b.dia} mm`;}
-function diaOpts(sel){
-  return bd.map(b=>`<option value="${b.dia}"${String(b.dia)===String(sel)?'selected':''}>${diaLbl(b)}</option>`).join('')
-    +`<option value="custom"${sel==='custom'?'selected':''}>Anden størrelse...</option>`;
-}
+function diaOpts(sel){return bd.map(b=>`<option value="${b.dia}"${String(b.dia)===String(sel)?'selected':''}>${diaLbl(b)}</option>`).join('')+`<option value="custom"${sel==='custom'?'selected':''}>Anden størrelse...</option>`;}
 function getBor(dia){
   if(dia==='0-92')return bd[0];
   const n=parseFloat(dia),b=bd.find(x=>x.dia===n||String(x.dia)===String(dia));
-  if(!b){
-    const ns=bd.filter(x=>typeof x.dia==='number').sort((a,c)=>a.dia-c.dia);
-    let lo=ns[0],hi=ns[ns.length-1];
-    for(let i=0;i<ns.length-1;i++){if(n>=ns[i].dia&&n<=ns[i+1].dia){lo=ns[i];hi=ns[i+1];break;}}
-    const r=(n-lo.dia)/Math.max(hi.dia-lo.dia,1);return {rate:lo.rate+r*(hi.rate-lo.rate)};
-  }
-  return b;
+  if(!b){const ns=bd.filter(x=>typeof x.dia==='number').sort((a,c)=>a.dia-c.dia);let lo=ns[0],hi=ns[ns.length-1];for(let i=0;i<ns.length-1;i++){if(n>=ns[i].dia&&n<=ns[i+1].dia){lo=ns[i];hi=ns[i+1];break;}}const r=(n-lo.dia)/Math.max(hi.dia-lo.dia,1);return{rate:lo.rate+r*(hi.rate-lo.rate)};}return b;
 }
-function calcBorPrice(dia,depth){
-  const bd2=Math.max(depth,20),b=getBor(dia),m=getMult();
-  return {price:Math.round(bd2*b.rate*m),billDepth:bd2,rate:b.rate};
-}
+function calcBorPrice(dia,depth){const bd2=Math.max(depth,20),b=getBor(dia),m=getMult();return{price:Math.round(bd2*b.rate*m),billDepth:bd2,rate:b.rate};}
 function getMult(){let m=1;if(cb.b.skra)m*=1.25;if(cb.b.underop)m*=2;return m;}
-function fmt(n){return n.toLocaleString('da');}
 
-// ── Checkboxes ────────────────────────────────────────
-function toggleCb(g,k){
-  cb[g][k]=!cb[g][k];
-  const el=document.getElementById(`cbi-${g}-${k}`);
-  if(el)el.classList.toggle('on',cb[g][k]);
-  if(g==='b')updateBorTotals();
-}
+// ── Checkboxes ─────────────────────────────────────────
+function toggleCb(g,k){cb[g][k]=!cb[g][k];const el=document.getElementById(`cbi-${g}-${k}`);if(el)el.classList.toggle('on',cb[g][k]);if(g==='b')updateBorTotals();}
 
-// ── Boring table ──────────────────────────────────────
+// ── Boring ─────────────────────────────────────────────
 function renderBorTable(){
   document.getElementById('boring-rows').innerHTML=bRows.map((r,i)=>`
-    <tr>
-      <td>
-        <select onchange="setBorDia(${i},this.value)">${diaOpts(r.dia)}</select>
-        ${r.dia==='custom'?`<input type="number" placeholder="mm" value="${r.customDia||''}" style="margin-top:4px" oninput="setBorCustom(${i},this.value)">` : ''}
-      </td>
-      <td>
-        <input type="number" placeholder="cm" value="${r.depthRaw}" min="1" oninput="setBorDepth(${i},this.value)">
-        <div class="row-hint" id="bh${i}"></div>
-      </td>
-      <td><input type="number" value="${r.qty}" min="1" style="max-width:58px" oninput="setBorQty(${i},this.value)"></td>
-      <td class="td-price" id="bu${i}">—</td>
-      <td class="td-price" id="bt${i}">—</td>
-      <td><button class="rm-btn" onclick="rmBorRow(${i})">✕</button></td>
-    </tr>`).join('');
+    <tr><td>
+      <select onchange="setBorDia(${i},this.value)">${diaOpts(r.dia)}</select>
+      ${r.dia==='custom'?`<input type="number" placeholder="mm" value="${r.customDia||''}" style="margin-top:4px" oninput="setBorCustom(${i},this.value)">` : ''}
+    </td>
+    <td><input type="number" placeholder="cm" value="${r.depthRaw}" min="1" oninput="setBorDepth(${i},this.value)"><div class="row-hint" id="bh${i}"></div></td>
+    <td><input type="number" value="${r.qty}" min="1" style="max-width:58px" oninput="setBorQty(${i},this.value)"></td>
+    <td class="td-price" id="bu${i}">—</td>
+    <td class="td-price" id="bt${i}">—</td>
+    <td><button class="rm-btn" onclick="rmBorRow(${i})">✕</button></td></tr>`).join('');
   updateBorTotals();
 }
 function updateBorTotals(){
@@ -677,11 +540,8 @@ function updateBorTotals(){
     const d=parseFloat(r.depthRaw)||0,q=parseInt(r.qty)||1,dia=r.dia==='custom'?(r.customDia||0):r.dia;
     const u=document.getElementById(`bu${i}`),t=document.getElementById(`bt${i}`),h=document.getElementById(`bh${i}`);
     if(!u)return;
-    if(dia&&d>0){
-      const {price,billDepth,rate}=calcBorPrice(dia,d);
-      u.textContent=fmt(price)+' kr';t.textContent=fmt(price*q)+' kr';
-      if(h)h.textContent=`${billDepth}cm${d<20?' (min)':''} × ${rate.toFixed(2)} kr`;
-    }else{u.textContent='—';t.textContent='—';if(h)h.textContent='';}
+    if(dia&&d>0){const{price,billDepth,rate}=calcBorPrice(dia,d);u.textContent=fmt(price)+' kr';t.textContent=fmt(price*q)+' kr';if(h)h.textContent=`${billDepth}cm${d<20?' (min)':''} × ${rate.toFixed(2)} kr`;}
+    else{u.textContent='—';t.textContent='—';if(h)h.textContent='';}
   });
   const tot=bRows.reduce((s,r)=>{const d=parseFloat(r.depthRaw)||0,q=parseInt(r.qty)||1,dia=r.dia==='custom'?(r.customDia||0):r.dia;return dia&&d>0?s+calcBorPrice(dia,d).price*q:s;},0);
   document.getElementById('boring-subtotal').textContent=tot>0?fmt(tot)+' kr':'0 kr';
@@ -700,39 +560,34 @@ function commitBoring(){
   bRows.forEach(r=>{
     const d=parseFloat(r.depthRaw)||0,q=parseInt(r.qty)||1,dia=r.dia==='custom'?r.customDia||0:r.dia;
     if(!dia||!d)return;
-    const {price,billDepth}=calcBorPrice(dia,d),b=getBor(dia),ds=r.dia==='custom'?`Ø${dia}mm`:(b.label||`Ø${dia}mm`);
+    const{price,billDepth}=calcBorPrice(dia,d),b=getBor(dia),ds=r.dia==='custom'?`Ø${dia}mm`:(b.label||`Ø${dia}mm`);
     items.push({type:'boring',desc:`Kerneboring ${ds}, ${billDepth}cm${d<20?' (min. 20cm)':''}${mn}${tag}`,qty:q,unitPrice:price,total:price*q});n++;
   });
   if(cb.b.boregrej)items.push({type:'t',desc:'Oprigningstillæg – Boregrej',qty:1,unitPrice:st.pBoregrej,total:st.pBoregrej});
   if(cb.b.ringsav)items.push({type:'t',desc:'Oprigningstillæg – Ring & Kapsav (boring)',qty:1,unitPrice:st.pOprigB,total:st.pOprigB});
   if(!n){alert('Udfyld mindst én linje.');return;}
-  hasBor=true;renderInv();showPage('faktura');
+  renderInv();flash('flash-boring');showToast('✓ Boringer tilføjet');
 }
 
-// ── Skæring table ─────────────────────────────────────
+// ── Skæring ────────────────────────────────────────────
 function renderSkTable(){
   document.getElementById('skaering-rows').innerHTML=sRows.map((r,i)=>`
-    <tr>
-      <td><select onchange="setSkType(${i},this.value)">
-        <option value="flad"${r.type==='flad'?'selected':''}>Ring & Kapsav</option>
-        <option value="vaeg"${r.type==='vaeg'?'selected':''}>Vægskæring</option>
-        <option value="gulv"${r.type==='gulv'?'selected':''}>Gulvskæring</option>
-      </select></td>
-      <td><input type="number" placeholder="m" value="${r.meter}" step="0.1" oninput="setSkMeter(${i},this.value)"></td>
-      <td><input type="number" placeholder="cm" value="${r.depth}" min="1" oninput="setSkDepth(${i},this.value)">
-        <div class="row-hint" id="sh${i}"></div></td>
-      <td><input type="number" value="${r.qty}" min="1" style="max-width:52px" oninput="setSkQty(${i},this.value)"></td>
-      <td class="td-price" id="st${i}">—</td>
-      <td><button class="rm-btn" onclick="rmSkRow(${i})">✕</button></td>
-    </tr>`).join('');
+    <tr><td><select onchange="setSkType(${i},this.value)">
+      <option value="flad"${r.type==='flad'?'selected':''}>Ring & Kapsav</option>
+      <option value="vaeg"${r.type==='vaeg'?'selected':''}>Vægskæring</option>
+      <option value="gulv"${r.type==='gulv'?'selected':''}>Gulvskæring</option>
+    </select></td>
+    <td><input type="number" placeholder="m" value="${r.meter}" step="0.1" oninput="setSkMeter(${i},this.value)"></td>
+    <td><input type="number" placeholder="cm" value="${r.depth}" min="1" oninput="setSkDepth(${i},this.value)"><div class="row-hint" id="sh${i}"></div></td>
+    <td><input type="number" value="${r.qty}" min="1" style="max-width:52px" oninput="setSkQty(${i},this.value)"></td>
+    <td class="td-price" id="st2${i}">—</td>
+    <td><button class="rm-btn" onclick="rmSkRow(${i})">✕</button></td></tr>`).join('');
   updateSkTotals();
 }
 function updateSkTotals(){
   sRows.forEach((r,i)=>{
-    const m=parseFloat(r.meter)||0,d=parseFloat(r.depth)||0,q=parseInt(r.qty)||1;
-    const p=st[{flad:'pFlad',vaeg:'pVaeg',gulv:'pGulv'}[r.type]]||.35;
-    const te=document.getElementById(`st${i}`),he=document.getElementById(`sh${i}`);
-    if(!te)return;
+    const m=parseFloat(r.meter)||0,d=parseFloat(r.depth)||0,q=parseInt(r.qty)||1,p=st[{flad:'pFlad',vaeg:'pVaeg',gulv:'pGulv'}[r.type]]||.35;
+    const te=document.getElementById(`st2${i}`),he=document.getElementById(`sh${i}`);if(!te)return;
     if(m>0&&d>0){const a=Math.round(m*100*d),u=Math.round(a*p);te.textContent=fmt(u*q)+' kr';if(he)he.textContent=fmt(a)+' cm²';}
     else{te.textContent='—';if(he)he.textContent='';}
   });
@@ -759,10 +614,10 @@ function commitSkaering(){
   if(cb.s.gulvsav)items.push({type:'t',desc:'Oprigningstillæg – Gulvsav',qty:1,unitPrice:st.pGulvsav,total:st.pGulvsav});
   if(cb.s.ringsav)items.push({type:'t',desc:'Oprigningstillæg – Ring & Kapsav (skæring)',qty:1,unitPrice:st.pOprigS,total:st.pOprigS});
   if(!n){alert('Udfyld mindst én linje.');return;}
-  hasSk=true;renderInv();showPage('faktura');
+  renderInv();flash('flash-skaering');showToast('✓ Skæring tilføjet');
 }
 
-// ── Tid ───────────────────────────────────────────────
+// ── Tid ────────────────────────────────────────────────
 function updateTidCalc(){
   const dN=gV('t-dia-normal'),dO=gV('t-dia-over'),nN=gV('t-norm'),nO=gV('t-over');
   const pD=st.pDiaNormal,pN=st.pNormNormal,pO=st.pOver,el=document.getElementById('tid-summary');
@@ -772,8 +627,7 @@ function updateTidCalc(){
   if(nN>0){const v=Math.round(nN*pN);tot+=v;lines.push(`Uden dia, normaltid: ${nN}t × ${pN} kr = <span class="highlight">${fmt(v)} kr</span>`);}
   if(nO>0){const v=Math.round(nO*(pN+pO));tot+=v;lines.push(`Uden dia, overtid: ${nO}t × ${pN+pO} kr = <span class="highlight">${fmt(v)} kr</span>`);}
   if(!lines.length){el.style.display='none';return;}
-  el.style.display='block';
-  el.innerHTML=lines.join('<br>')+`<div class="total-line">Total: ${fmt(tot)} kr</div>`;
+  el.style.display='block';el.innerHTML=lines.join('<br>')+`<div class="total-line">Total: ${fmt(tot)} kr</div>`;
 }
 function commitTid(){
   const dN=gV('t-dia-normal'),dO=gV('t-dia-over'),nN=gV('t-norm'),nO=gV('t-over');
@@ -783,7 +637,7 @@ function commitTid(){
   if(dO>0){const r=pD+pO,v=Math.round(dO*r);items.push({type:'tid',desc:`Arbejdstid inkl. diamantværktøj – overtid (${dO}t × ${r} kr)`,qty:1,unitPrice:v,total:v});}
   if(nN>0){const v=Math.round(nN*pN);items.push({type:'tid',desc:`Arbejdstid uden diamantværktøj – normaltid (${nN}t × ${pN} kr)`,qty:1,unitPrice:v,total:v});}
   if(nO>0){const r=pN+pO,v=Math.round(nO*r);items.push({type:'tid',desc:`Arbejdstid uden diamantværktøj – overtid (${nO}t × ${r} kr)`,qty:1,unitPrice:v,total:v});}
-  renderInv();showPage('faktura');
+  renderInv();flash('flash-tid');showToast('✓ Tid tilføjet');
 }
 function updateKm(){
   const km=gV('k-km'),f=st.pKmFast,e=st.pKmExtra,ov=Math.max(0,km-25),p=km===0?0:Math.round(f+ov*e);
@@ -794,28 +648,25 @@ function commitKorsel(){
   const km=gV('k-km');if(!km){alert('Indtast antal km.');return;}
   const f=st.pKmFast,e=st.pKmExtra,ov=Math.max(0,km-25),p=Math.round(f+ov*e);
   items.push({type:'km',desc:`Kørsel ${km} km${ov>0?` (25 km fast + ${ov} km × ${e} kr)`:''}`,qty:1,unitPrice:p,total:p});
-  renderInv();showPage('faktura');
+  renderInv();flash('flash-korsel');showToast('✓ Kørsel tilføjet');
 }
 
-// ── Invoice ───────────────────────────────────────────
-function rmItem(i){items.splice(i,1);hasBor=items.some(x=>x.type==='boring');hasSk=items.some(x=>x.type==='sk');renderInv();}
+// ── Tilbud ─────────────────────────────────────────────
+function rmItem(i){items.splice(i,1);renderInv();}
 function renderInv(){
   const w=document.getElementById('line-items'),b=document.getElementById('item-badge');
   if(!items.length){
-    w.innerHTML='<div class="inv-empty"><div class="inv-empty-icon">🧾</div><div class="inv-empty-text">Ingen ydelser tilføjet endnu</div></div>';
+    w.innerHTML='<div class="inv-empty"><div class="inv-empty-icon">📄</div><div class="inv-empty-text">Ingen ydelser tilføjet endnu</div></div>';
     document.getElementById('faktura-totals').style.display='none';b.style.display='none';return;
   }
   b.style.display='inline-flex';b.textContent=items.length;
   w.innerHTML=items.map((it,i)=>`
     <div class="inv-item">
       <div class="inv-desc">${it.desc}${it.qty>1?`<small>${it.qty} stk × ${fmt(it.unitPrice)} kr</small>`:''}</div>
-      <div class="inv-right">
-        <span class="inv-price">${fmt(it.total)} kr</span>
-        <button class="rm-btn" onclick="rmItem(${i})">✕</button>
-      </div>
+      <div class="inv-right"><span class="inv-price">${fmt(it.total)} kr</span><button class="rm-btn" onclick="rmItem(${i})">✕</button></div>
     </div>`).join('');
   const sub=items.reduce((s,x)=>s+x.total,0),sg=st.pStart||0,tex=sub+sg,moms=Math.round(tex*.25),grand=tex+moms;
-  document.getElementById('subtotal-val').textContent=fmt(sub)+' kr';
+  sV('subtotal-val',undefined);document.getElementById('subtotal-val').textContent=fmt(sub)+' kr';
   document.getElementById('start-row').style.display=sg>0?'flex':'none';
   document.getElementById('startgebyr-val').textContent=fmt(sg)+' kr';
   document.getElementById('total-ex-val').textContent=fmt(tex)+' kr';
@@ -823,16 +674,100 @@ function renderInv(){
   document.getElementById('grand-val').textContent=fmt(grand)+' kr';
   document.getElementById('faktura-totals').style.display='block';
 }
+function clearTilbud(){if(confirm('Ryd tilbud?')){items=[];renderInv();}}
 
-// ── Settings list ─────────────────────────────────────
+// ── Historik ───────────────────────────────────────────
+function saveTilbudToHistory(){
+  if(!items.length){showToast('⚠ Tilbud er tomt');return;}
+  const sub=items.reduce((s,x)=>s+x.total,0),sg=st.pStart||0,tex=sub+sg,grand=tex+Math.round(tex*.25);
+  const kunde=document.getElementById('f-kunde').value||'Ukendt kunde';
+  const entry={
+    id:Date.now(),
+    dato:new Date().toLocaleDateString('da-DK'),
+    kunde,
+    nr:document.getElementById('f-nr').value||'—',
+    lines:items.map(it=>it.desc+(it.qty>1?` (${it.qty} stk)`:'')+(` – ${fmt(it.total)} kr`)),
+    grand,
+    items:J(items),
+  };
+  history.unshift(entry);
+  if(history.length>20)history.pop();
+  localStorage.setItem('diam_h',JSON.stringify(history));
+  renderHistory();showToast('✓ Gemt i historik');
+}
+function loadFromHistory(id){
+  const e=history.find(x=>x.id===id);if(!e)return;
+  if(!confirm(`Indlæs tilbud til ${e.kunde} fra ${e.dato}?\nDet vil erstatte det nuværende tilbud.`))return;
+  items=J(e.items);renderInv();
+  document.getElementById('f-kunde').value=e.kunde;
+  document.getElementById('f-nr').value=e.nr;
+  showPage('tilbud');showToast('✓ Tilbud indlæst');
+}
+function deleteFromHistory(id){
+  if(!confirm('Slet dette tilbud fra historikken?'))return;
+  history=history.filter(x=>x.id!==id);
+  localStorage.setItem('diam_h',JSON.stringify(history));
+  renderHistory();showToast('✓ Slettet');
+}
+function clearHistory(){
+  if(!confirm('Slet al historik?'))return;
+  history=[];localStorage.removeItem('diam_h');renderHistory();showToast('✓ Historik ryddet');
+}
+function renderHistory(){
+  const w=document.getElementById('hist-list'),b=document.getElementById('hist-badge');
+  b.style.display=history.length?'inline-flex':'none';
+  b.textContent=history.length;
+  if(!history.length){
+    w.innerHTML='<div class="hist-empty"><div class="hist-empty-icon">🕓</div><div style="font-size:.85rem;font-weight:500">Ingen gemte tilbud endnu</div><div style="font-size:.78rem;color:var(--text3)">Gem et tilbud fra Tilbud-fanen</div></div>';
+    return;
+  }
+  w.innerHTML=history.map((e,idx)=>`
+    <div class="hist-item">
+      <div class="hist-top">
+        <div class="hist-name">${e.kunde}</div>
+        <div class="hist-date">${e.dato} · Nr. ${e.nr}</div>
+      </div>
+      <div class="hist-lines">${e.lines.slice(0,3).join('<br>')}${e.lines.length>3?`<br><span style="color:var(--text3)">+${e.lines.length-3} flere...</span>`:''}</div>
+      <div class="hist-total">${fmt(e.grand)} kr inkl. moms</div>
+      <div class="hist-actions">
+        <button class="hist-btn hist-btn-load" data-idx="${idx}">↩ Indlæs tilbud</button>
+        <button class="hist-btn hist-btn-del" data-idx="${idx}">✕ Slet</button>
+      </div>
+    </div>`).join('');
+
+  // Attach events after render to avoid onclick scope issues
+  w.querySelectorAll('.hist-btn-load').forEach(btn=>{
+    btn.addEventListener('click',()=>loadFromHistory(parseInt(btn.dataset.idx)));
+  });
+  w.querySelectorAll('.hist-btn-del').forEach(btn=>{
+    btn.addEventListener('click',()=>deleteFromHistory(parseInt(btn.dataset.idx)));
+  });
+}
+
+function loadFromHistory(idx){
+  const e=history[idx];if(!e)return;
+  if(!confirm(`Indlæs tilbud til ${e.kunde} fra ${e.dato}?\nDet vil erstatte det nuværende tilbud.`))return;
+  items=J(e.items);renderInv();
+  document.getElementById('f-kunde').value=e.kunde;
+  document.getElementById('f-nr').value=e.nr;
+  showPage('tilbud');showToast('✓ Tilbud indlæst');
+}
+
+function deleteFromHistory(idx){
+  if(!confirm('Slet dette tilbud fra historikken?'))return;
+  history.splice(idx,1);
+  localStorage.setItem('diam_h',JSON.stringify(history));
+  renderHistory();showToast('✓ Slettet');
+}
+
+// ── Settings bor ───────────────────────────────────────
 function renderBorList(){
   const w=document.getElementById('boring-price-list');
   if(!bd.length){w.innerHTML='<p style="color:var(--text3);font-size:.82rem;padding:8px 0">Ingen bor tilføjet.</p>';return;}
   w.innerHTML=bd.map((b,i)=>`
     <div class="bor-list-row">
       <span class="dia">${diaLbl(b)}</span>
-      <input type="number" value="${b.rate}" min="0" step="0.25"
-        oninput="bd[${i}].rate=parseFloat(this.value)||0;saveD();renderBorTable()">
+      <input type="number" value="${b.rate}" min="0" step="0.25" oninput="bd[${i}].rate=parseFloat(this.value)||0;saveD();renderBorTable()">
       <button class="rm-btn" onclick="rmDia(${i})">✕</button>
     </div>`).join('');
 }
@@ -846,8 +781,7 @@ function addBorDia(){
 }
 function rmDia(i){if(!confirm(`Fjern ${diaLbl(bd[i])}?`))return;bd.splice(i,1);saveD();renderBorList();renderBorTable();}
 
-function printFaktura(){
-  // Sync print header with customer fields
+function printTilbud(){
   const g=id=>document.getElementById(id)?.value||'—';
   document.getElementById('ph-firma').textContent=g('f-kunde');
   document.getElementById('ph-adresse').textContent=g('f-adresse');
@@ -856,12 +790,12 @@ function printFaktura(){
   document.getElementById('ph-frist').textContent=g('f-frist');
   window.print();
 }
-function clearFaktura(){if(confirm('Ryd hele fakturaen?')){items=[];hasBor=false;hasSk=false;renderInv();}}
+
 function showPage(n){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+n).classList.add('active');
-  ['boring','skaering','tid','faktura','indstillinger'].forEach((x,i)=>{if(x===n)document.querySelectorAll('.tab')[i].classList.add('active');});
+  ['boring','skaering','tid','tilbud','indstillinger','historik'].forEach((x,i)=>{if(x===n)document.querySelectorAll('.tab')[i].classList.add('active');});
 }
 </script>
 </body>
