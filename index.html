@@ -63,6 +63,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent);}
 .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
 .sep{height:1px;background:var(--border);margin:12px 0;}
 .st{font-size:.85rem;font-weight:700;color:var(--primary);margin-bottom:6px;}
+.row-hint{font-size:.7rem;color:var(--muted);min-height:1em;}
 .tid-summary{background:#fff8f0;border:1px solid #ffd0a0;border-radius:8px;padding:10px 13px;margin-top:10px;font-size:.85rem;line-height:1.7;}
 .tid-summary strong{color:var(--accent);}
 @media print{
@@ -91,10 +92,10 @@ input:focus,select:focus{outline:none;border-color:var(--accent);}
     <div class="sep"></div>
     <div class="st">Tillæg (afkryds hvad der gælder)</div>
     <div class="cb-group">
-      <label class="cb-item" onclick="toggleCb('b','boregrej')"><input type="checkbox" id="cb-b-boregrej">🔧 Boregrej</label>
-      <label class="cb-item" onclick="toggleCb('b','ringsav')"><input type="checkbox" id="cb-b-ringsav">⭕ Ring & kapsav</label>
-      <label class="cb-item" onclick="toggleCb('b','skra')"><input type="checkbox" id="cb-b-skra">📐 Skråboring <span class="cb-badge">+25%</span></label>
-      <label class="cb-item" onclick="toggleCb('b','underop')"><input type="checkbox" id="cb-b-underop">⬆️ Under-op boring <span class="cb-badge">+100%</span></label>
+      <div class="cb-item" id="cbi-b-boregrej" onclick="toggleCb('b','boregrej')">🔧 Boregrej</div>
+      <div class="cb-item" id="cbi-b-ringsav" onclick="toggleCb('b','ringsav')">⭕ Ring & kapsav</div>
+      <div class="cb-item" id="cbi-b-skra" onclick="toggleCb('b','skra')">📐 Skråboring <span class="cb-badge">+25%</span></div>
+      <div class="cb-item" id="cbi-b-underop" onclick="toggleCb('b','underop')">⬆️ Under-op boring <span class="cb-badge">+100%</span></div>
     </div>
     <div class="sep"></div>
     <div style="overflow-x:auto;">
@@ -121,9 +122,9 @@ input:focus,select:focus{outline:none;border-color:var(--accent);}
     <h2>🔪 Skæring</h2>
     <div class="st">Tillæg</div>
     <div class="cb-group">
-      <label class="cb-item" onclick="toggleCb('s','vaegsaw')"><input type="checkbox" id="cb-s-vaegsaw">🪚 Vægsav</label>
-      <label class="cb-item" onclick="toggleCb('s','gulvsav')"><input type="checkbox" id="cb-s-gulvsav">🔲 Gulvsav</label>
-      <label class="cb-item" onclick="toggleCb('s','ringsav')"><input type="checkbox" id="cb-s-ringsav">⭕ Ring & kapsav</label>
+      <div class="cb-item" id="cbi-s-vaegsaw" onclick="toggleCb('s','vaegsaw')">🪚 Vægsav</div>
+      <div class="cb-item" id="cbi-s-gulvsav" onclick="toggleCb('s','gulvsav')">🔲 Gulvsav</div>
+      <div class="cb-item" id="cbi-s-ringsav" onclick="toggleCb('s','ringsav')">⭕ Ring & kapsav</div>
     </div>
     <div class="sep"></div>
     <div style="overflow-x:auto;">
@@ -465,9 +466,9 @@ function getBoringPrice(dia,depth){
 // ── Checkboxes ─────────────────────────────────────────
 function toggleCb(group,key){
   cbState[group][key]=!cbState[group][key];
-  const el=document.getElementById(`cb-${group}-${key}`);if(el)el.checked=cbState[group][key];
-  document.querySelectorAll('.cb-item').forEach(item=>{const cb=item.querySelector('input');if(cb)item.classList.toggle('checked',cb.checked);});
-  if(group==='b')renderBoringTable();
+  const el=document.getElementById(`cbi-${group}-${key}`);
+  if(el) el.classList.toggle('checked', cbState[group][key]);
+  if(group==='b') updateBoringTotals();
 }
 function getBoringMultiplier(){let m=1;if(cbState.b.skra)m*=1.25;if(cbState.b.underop)m*=2;return m;}
 
@@ -475,28 +476,53 @@ function getBoringMultiplier(){let m=1;if(cbState.b.skra)m*=1.25;if(cbState.b.un
 function renderBoringTable(){
   const tbody=document.getElementById('boring-rows');
   tbody.innerHTML=boringRows.map((row,i)=>{
-    const depth=parseFloat(row.depthRaw)||0,qty=parseInt(row.qty)||1;
-    const isCustom=row.dia==='custom',dia=isCustom?(row.customDia||0):row.dia;
-    let rowTotal=0,unitP=0,billDepth=0,rate=0;
-    if(dia&&depth>0){const r=getBoringPrice(dia,depth);rowTotal=r.price*qty;unitP=r.price;billDepth=r.billDepth;rate=r.rate;}
-    return `<tr class="data-row">
+    return `<tr class="data-row" id="bor-row-${i}">
       <td>
-        <select onchange="setBorRow(${i},'dia',this.value)">${diaOptions(row.dia)}</select>
-        ${isCustom?`<input type="number" placeholder="mm" value="${row.customDia||''}" style="margin-top:4px" oninput="setBorRow(${i},'customDia',parseFloat(this.value)||0)">` : ''}
+        <select onchange="setBorRowDia(${i},this.value)">${diaOptions(row.dia)}</select>
+        ${row.dia==='custom'?`<input type="number" placeholder="mm" value="${row.customDia||''}" style="margin-top:4px" oninput="setBorRowCustom(${i},this.value)">` : ''}
       </td>
       <td>
-        <input type="number" placeholder="cm" value="${row.depthRaw}" min="1" oninput="setBorRow(${i},'depthRaw',this.value)">
-        ${billDepth>0?`<div style="font-size:.7rem;color:var(--muted)">${billDepth}cm${depth<20?' (min)':''} × ${rate.toFixed(2)} kr</div>`:''}
+        <input type="number" placeholder="cm" value="${row.depthRaw}" min="1" oninput="setBorRowDepth(${i},this.value)">
+        <div class="row-hint" id="bor-hint-${i}"></div>
       </td>
-      <td><input type="number" value="${row.qty}" min="1" style="max-width:60px" oninput="setBorRow(${i},'qty',parseInt(this.value)||1)"></td>
-      <td class="row-total">${unitP>0?unitP.toLocaleString('da')+' kr':'–'}</td>
-      <td class="row-total">${rowTotal>0?rowTotal.toLocaleString('da')+' kr':'–'}</td>
+      <td><input type="number" value="${row.qty}" min="1" style="max-width:60px" oninput="setBorRowQty(${i},this.value)"></td>
+      <td class="row-total" id="bor-unit-${i}">–</td>
+      <td class="row-total" id="bor-total-${i}">–</td>
       <td><button class="rm-btn" onclick="removeBorRow(${i})">✕</button></td>
     </tr>`;
   }).join('');
+  updateBoringTotals();
+}
+
+function updateBoringTotals(){
+  boringRows.forEach((row,i)=>{
+    const depth=parseFloat(row.depthRaw)||0,qty=parseInt(row.qty)||1;
+    const dia=row.dia==='custom'?(row.customDia||0):row.dia;
+    const unitEl=document.getElementById(`bor-unit-${i}`);
+    const totEl=document.getElementById(`bor-total-${i}`);
+    const hintEl=document.getElementById(`bor-hint-${i}`);
+    if(!unitEl)return;
+    if(dia&&depth>0){
+      const {price,billDepth,rate}=getBoringPrice(dia,depth);
+      unitEl.textContent=price.toLocaleString('da')+' kr';
+      totEl.textContent=(price*qty).toLocaleString('da')+' kr';
+      if(hintEl)hintEl.textContent=`${billDepth}cm${depth<20?' (min)':''} × ${rate.toFixed(2)} kr`;
+    } else {
+      unitEl.textContent='–';totEl.textContent='–';if(hintEl)hintEl.textContent='';
+    }
+  });
   calcBoringSubtotal();
 }
-function setBorRow(i,k,v){boringRows[i][k]=v;renderBoringTable();}
+
+function setBorRowDia(i,v){
+  boringRows[i].dia=v;
+  // re-render only this row's select area (for custom input toggle)
+  renderBoringTable();
+}
+function setBorRowCustom(i,v){boringRows[i].customDia=parseFloat(v)||0;updateBoringTotals();}
+function setBorRowDepth(i,v){boringRows[i].depthRaw=v;updateBoringTotals();}
+function setBorRowQty(i,v){boringRows[i].qty=parseInt(v)||1;updateBoringTotals();}
+
 function addBoringRow(){boringRows.push({dia:borDiameters[0].dia,depthRaw:'',qty:1});renderBoringTable();}
 function removeBorRow(i){if(boringRows.length===1){boringRows=[{dia:borDiameters[0].dia,depthRaw:'',qty:1}];}else{boringRows.splice(i,1);}renderBoringTable();}
 function calcBoringSubtotal(){
@@ -529,28 +555,44 @@ function commitBoring(){
 // ── Skæring rows ───────────────────────────────────────
 function renderSkaeringTable(){
   const tbody=document.getElementById('skaering-rows');
-  tbody.innerHTML=skaeringRows.map((row,i)=>{
-    const meter=parseFloat(row.meter)||0,depth=parseFloat(row.depth)||0,qty=parseInt(row.qty)||1;
-    const pKey={flad:'pFlad',vaeg:'pVaeg',gulv:'pGulv'}[row.type],p=settings[pKey]||0.35;
-    const area=meter>0&&depth>0?Math.round(meter*100*depth):0,unit=area>0?Math.round(area*p):0;
-    return `<tr class="data-row">
-      <td><select onchange="setSkRow(${i},'type',this.value)">
+  tbody.innerHTML=skaeringRows.map((row,i)=>`
+    <tr class="data-row">
+      <td><select onchange="setSkRowType(${i},this.value)">
         <option value="flad"${row.type==='flad'?'selected':''}>Ring & Kapsav</option>
         <option value="vaeg"${row.type==='vaeg'?'selected':''}>Vægskæring</option>
         <option value="gulv"${row.type==='gulv'?'selected':''}>Gulvskæring</option>
       </select></td>
-      <td><input type="number" placeholder="m" value="${row.meter}" step="0.1" oninput="setSkRow(${i},'meter',this.value)"></td>
-      <td><input type="number" placeholder="cm" value="${row.depth}" min="1" oninput="setSkRow(${i},'depth',this.value)">
-        ${area>0?`<div style="font-size:.7rem;color:var(--muted)">${area.toLocaleString('da')} cm²</div>`:''}
+      <td><input type="number" placeholder="m" value="${row.meter}" step="0.1" oninput="setSkRowMeter(${i},this.value)"></td>
+      <td>
+        <input type="number" placeholder="cm" value="${row.depth}" min="1" oninput="setSkRowDepth(${i},this.value)">
+        <div class="row-hint" id="sk-hint-${i}"></div>
       </td>
-      <td><input type="number" value="${row.qty}" min="1" style="max-width:55px" oninput="setSkRow(${i},'qty',parseInt(this.value)||1)"></td>
-      <td class="row-total">${unit*qty>0?(unit*qty).toLocaleString('da')+' kr':'–'}</td>
+      <td><input type="number" value="${row.qty}" min="1" style="max-width:55px" oninput="setSkRowQty(${i},this.value)"></td>
+      <td class="row-total" id="sk-total-${i}">–</td>
       <td><button class="rm-btn" onclick="removeSkRow(${i})">✕</button></td>
-    </tr>`;
-  }).join('');
+    </tr>`).join('');
+  updateSkaeringTotals();
+}
+
+function updateSkaeringTotals(){
+  skaeringRows.forEach((row,i)=>{
+    const m=parseFloat(row.meter)||0,d=parseFloat(row.depth)||0,q=parseInt(row.qty)||1;
+    const pKey={flad:'pFlad',vaeg:'pVaeg',gulv:'pGulv'}[row.type],p=settings[pKey]||0.35;
+    const totEl=document.getElementById(`sk-total-${i}`),hintEl=document.getElementById(`sk-hint-${i}`);
+    if(!totEl)return;
+    if(m>0&&d>0){
+      const area=Math.round(m*100*d),unit=Math.round(area*p);
+      totEl.textContent=(unit*q).toLocaleString('da')+' kr';
+      if(hintEl)hintEl.textContent=`${area.toLocaleString('da')} cm²`;
+    } else {totEl.textContent='–';if(hintEl)hintEl.textContent='';}
+  });
   calcSkaeringSubtotal();
 }
-function setSkRow(i,k,v){skaeringRows[i][k]=v;renderSkaeringTable();}
+
+function setSkRowType(i,v){skaeringRows[i].type=v;updateSkaeringTotals();}
+function setSkRowMeter(i,v){skaeringRows[i].meter=v;updateSkaeringTotals();}
+function setSkRowDepth(i,v){skaeringRows[i].depth=v;updateSkaeringTotals();}
+function setSkRowQty(i,v){skaeringRows[i].qty=parseInt(v)||1;updateSkaeringTotals();}
 function addSkaeringRow(){skaeringRows.push({type:'flad',meter:'',depth:'',qty:1});renderSkaeringTable();}
 function removeSkRow(i){if(skaeringRows.length===1){skaeringRows=[{type:'flad',meter:'',depth:'',qty:1}];}else{skaeringRows.splice(i,1);}renderSkaeringTable();}
 function calcSkaeringSubtotal(){
