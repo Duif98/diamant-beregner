@@ -190,7 +190,7 @@ td input:focus,td select:focus{background:var(--surface3);}
   .modal-overlay.printing{display:block!important;position:static;background:none;padding:0;}
   .modal-overlay.printing .modal{border:none;padding:0;background:#fff;max-width:100%;}
   .modal-overlay.printing .modal-header{border-bottom:2px solid #e05a1e;}
-  .modal-overlay.printing .modal-close{display:none;}
+  .modal-overlay.printing #modal-rabat-section{display:none!important;}
   .card,.modal .card{background:#fff!important;border:1px solid #ddd!important;box-shadow:none!important;margin-bottom:10px;border-radius:6px!important;padding:14px!important;}
   .card-title{color:#444!important;border-bottom:1px solid #eee;padding-bottom:8px;margin-bottom:12px;}
   .card-title::before{background:#e05a1e!important;}
@@ -831,11 +831,96 @@ function viewHistory(idx){
   showPrintModal(e,false);
 }
 
-function showPrintModal(e,autoPrint){
-  const pct=e.pct||0;
-  const{sub,rabatKr,sg,tex,moms,grand}=e.grand?e:buildTotals(e.items,e.rabatKr||0);
-  const scope=e.scope||'all';
-  const rt=e.rabatTypes||{boring:true,t:true,tid:true,km:true};
+// Modal rabat state
+let modalEntry=null;
+let modalRabatPct=0;
+let modalRabatScope='all';
+let modalRabatTypes={boring:true,t:true,tid:true,km:true};
+
+function calcModalRabat(itemsList){
+  if(!modalRabatPct||modalRabatPct<=0)return 0;
+  let base=0;
+  itemsList.forEach(it=>{
+    const applies=modalRabatScope==='all'||modalRabatTypes[it.type];
+    if(applies)base+=it.total;
+  });
+  return Math.round(base*modalRabatPct/100);
+}
+
+function renderModalTotals(){
+  if(!modalEntry)return;
+  const e=modalEntry;
+  const pct=modalRabatPct;
+  const scope=modalRabatScope;
+  const rt=modalRabatTypes;
+  const rabatKr=calcModalRabat(e.items);
+  const{sub,sg,tex,moms,grand}=buildTotals(e.items,rabatKr);
+
+  // Update items list
+  document.getElementById('modal-items').innerHTML=e.items.map(it=>{
+    const applies=(scope==='all'||rt[it.type])&&pct>0;
+    const disc=applies?Math.round(it.total*pct/100):0;
+    return`<div class="inv-item">
+      <div class="inv-desc">${it.desc}${it.qty>1?`<small>${it.qty} stk × ${fmt(it.unitPrice)} kr</small>`:''}</div>
+      <div class="inv-right">
+        ${applies?`<span class="inv-price struck">${fmt(it.total)} kr</span><span class="inv-price-disc">${fmt(it.total-disc)} kr</span>`:`<span class="inv-price">${fmt(it.total)} kr</span>`}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Rabat pills if custom
+  const pillsWrap=document.getElementById('modal-rabat-pills-wrap');
+  if(scope==='custom'){
+    pillsWrap.style.display='block';
+    document.getElementById('modal-rabat-pills').innerHTML=Object.entries(RAB_TYPES).map(([k,lbl])=>`
+      <div class="rab-pill ${rt[k]?'on':''}" data-key="${k}"><span class="dot"></span>${lbl}</div>`).join('');
+    document.querySelectorAll('#modal-rabat-pills .rab-pill').forEach(p=>{
+      p.addEventListener('click',()=>{
+        modalRabatTypes[p.dataset.key]=!modalRabatTypes[p.dataset.key];
+        p.classList.toggle('on',modalRabatTypes[p.dataset.key]);
+        renderModalTotals();
+      });
+    });
+  } else {
+    pillsWrap.style.display='none';
+  }
+
+  // Rabat preview
+  const prev=document.getElementById('modal-rabat-preview');
+  if(rabatKr>0){
+    prev.style.display='block';
+    prev.innerHTML=`<div class="lbl">Rabatfordeling</div>`+
+      Object.entries(RAB_TYPES).map(([k,lbl])=>{
+        const app=scope==='all'||rt[k];
+        const kSum=e.items.filter(x=>x.type===k).reduce((s,x)=>s+x.total,0);
+        if(!kSum)return'';
+        const kDisc=app?Math.round(kSum*pct/100):0;
+        return`<div class="rabat-row"><span>${lbl}</span><span>${app?'− '+fmt(kDisc)+' kr':'Ingen rabat'}</span></div>`;
+      }).join('');
+  } else prev.style.display='none';
+
+  // Totals
+  document.getElementById('modal-sub').textContent=fmt(sub)+' kr';
+  const rabRow=document.getElementById('modal-rabat-row');
+  if(rabatKr>0){
+    rabRow.style.display='flex';
+    document.getElementById('modal-rabat-label').textContent=`Rabat ${pct}%${scope==='custom'?' (udvalgte)':''}`;
+    document.getElementById('modal-rabat-val').textContent='− '+fmt(rabatKr)+' kr';
+  } else rabRow.style.display='none';
+  const sgRow=document.getElementById('modal-sg-row');
+  sgRow.style.display=sg>0?'flex':'none';
+  document.getElementById('modal-sg-val').textContent=fmt(sg)+' kr';
+  document.getElementById('modal-tex').textContent=fmt(tex)+' kr';
+  document.getElementById('modal-moms').textContent=fmt(moms)+' kr';
+  document.getElementById('modal-grand').textContent=fmt(grand)+' kr';
+}
+
+function showPrintModal(e, autoPrint){
+  modalEntry=e;
+  // Init rabat from saved entry (for historik) or reset for current
+  modalRabatPct=e.pct||0;
+  modalRabatScope=e.scope||'all';
+  modalRabatTypes=e.rabatTypes?J(e.rabatTypes):{boring:true,t:true,tid:true,km:true};
 
   document.getElementById('modal-title').textContent=`Tilbud – ${e.kunde}`;
 
@@ -856,32 +941,53 @@ function showPrintModal(e,autoPrint){
     </div>
 
     <!-- Ydelser -->
-    <div style="margin-bottom:14px">
-      ${e.items.map(it=>{
-        const applies=(scope==='all'||rt[it.type])&&pct>0;
-        const disc=applies?Math.round(it.total*pct/100):0;
-        return`<div class="inv-item">
-          <div class="inv-desc">${it.desc}${it.qty>1?`<small>${it.qty} stk × ${fmt(it.unitPrice)} kr</small>`:''}</div>
-          <div class="inv-right">
-            ${applies?`<span class="inv-price struck">${fmt(it.total)} kr</span><span class="inv-price-disc">${fmt(it.total-disc)} kr</span>`:`<span class="inv-price">${fmt(it.total)} kr</span>`}
-          </div>
-        </div>`;
-      }).join('')}
+    <div id="modal-items" style="margin-bottom:14px"></div>
+
+    <!-- Rabat sektion -->
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px" id="modal-rabat-section">
+      <div style="font-size:.75rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Rabat</div>
+      <div class="g2">
+        <div class="field"><label>Rabat (%)</label>
+          <input type="number" id="modal-rabat-pct" value="${modalRabatPct||''}" placeholder="0" min="0" max="100" step="0.5">
+        </div>
+        <div class="field"><label>Gælder for</label>
+          <select id="modal-rabat-scope">
+            <option value="all"${modalRabatScope==='all'?'selected':''}>Hele tilbuddet</option>
+            <option value="custom"${modalRabatScope==='custom'?'selected':''}>Vælg selv...</option>
+          </select>
+        </div>
+      </div>
+      <div id="modal-rabat-pills-wrap" style="display:none;margin-top:8px">
+        <div class="section-label">Rabat gælder for</div>
+        <div class="rab-cb-wrap" id="modal-rabat-pills"></div>
+      </div>
+      <div id="modal-rabat-preview" class="rabat-box" style="display:none;margin-top:10px"></div>
     </div>
 
     <!-- Totals -->
     <div class="totals-box">
-      <div class="tot-row"><span>Subtotal ydelser</span><span>${fmt(sub)} kr</span></div>
-      ${rabatKr>0?`<div class="tot-row discount"><span>Rabat ${pct}%${scope==='custom'?' (udvalgte)':''}</span><span>− ${fmt(rabatKr)} kr</span></div>`:''}
-      ${sg>0?`<div class="tot-row"><span>Startgebyr</span><span>${fmt(sg)} kr</span></div>`:''}
-      <div class="tot-row main"><span>I alt ex. moms</span><span>${fmt(tex)} kr</span></div>
-      <div class="tot-row"><span>Moms 25%</span><span>${fmt(moms)} kr</span></div>
+      <div class="tot-row"><span>Subtotal ydelser</span><span id="modal-sub">—</span></div>
+      <div class="tot-row discount" id="modal-rabat-row" style="display:none"><span id="modal-rabat-label">Rabat</span><span id="modal-rabat-val">—</span></div>
+      <div class="tot-row" id="modal-sg-row" style="display:none"><span>Startgebyr</span><span id="modal-sg-val">—</span></div>
+      <div class="tot-row main"><span>I alt ex. moms</span><span id="modal-tex">—</span></div>
+      <div class="tot-row"><span>Moms 25%</span><span id="modal-moms">—</span></div>
     </div>
-    <div class="grand-box" style="margin-top:10px"><div class="lbl">Total inkl. moms</div><div class="val">${fmt(grand)} kr</div></div>
+    <div class="grand-box" style="margin-top:10px"><div class="lbl">Total inkl. moms</div><div class="val" id="modal-grand">—</div></div>
   `;
 
+  // Wire up events
+  document.getElementById('modal-rabat-pct').addEventListener('input',e2=>{
+    modalRabatPct=parseFloat(e2.target.value)||0;renderModalTotals();
+  });
+  document.getElementById('modal-rabat-scope').addEventListener('change',e2=>{
+    modalRabatScope=e2.target.value;
+    if(modalRabatScope==='all')Object.keys(modalRabatTypes).forEach(k=>modalRabatTypes[k]=true);
+    renderModalTotals();
+  });
+
   document.getElementById('hist-modal').classList.add('open');
-  if(autoPrint) setTimeout(()=>printModal(),300);
+  renderModalTotals();
+  if(autoPrint)setTimeout(()=>printModal(),300);
 }
 
 function closeModal(){
